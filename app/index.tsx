@@ -1,13 +1,19 @@
 import CustomButtom from "@/components/customButton";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
+import { getClass } from "@/lib/appwrite";
+import useAppwrite from "@/lib/useAppwrite";
 import { Redirect, router } from "expo-router";
 import { GraduationCap } from "lucide-react-native";
 import { Dimensions, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function Index() {
+  const { data } = useAppwrite(getClass);
   const { isLoading, isLoggedIn } = useGlobalStore();
   if (!isLoading && isLoggedIn) {
-    return <Redirect href="/home" />;
+    if (data && data.length > 0) return <Redirect href="/home" />;
+    else {
+      return <Redirect href="/requiredSteps/forcedClassScreen" />;
+    }
   }
   return (
     <SafeAreaView className="h-full">

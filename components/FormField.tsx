@@ -6,7 +6,13 @@ type Props = {
   title: string;
   value: string;
   placeholder?: string;
-  keyboardType: "email" | "password" | "default" | "numeric" | "creditHours";
+  keyboardType:
+    | "email"
+    | "password"
+    | "default"
+    | "numeric"
+    | "creditHours"
+    | "semester";
   otherStyles?: string;
   editable?: boolean;
   handleChangeText: (e: any) => void;
@@ -35,7 +41,9 @@ const FormField = ({
           placeholder={placeholder}
           placeholderTextColor="#828282"
           inputMode={
-            keyboardType === "numeric" || keyboardType === "creditHours"
+            keyboardType === "numeric" ||
+            keyboardType === "creditHours" ||
+            keyboardType === "semester"
               ? "numeric"
               : "text"
           }
@@ -44,6 +52,8 @@ const FormField = ({
               ? 1
               : keyboardType === "numeric"
               ? 3
+              : keyboardType === "semester"
+              ? 2
               : undefined
           }
           onChangeText={handleChangeText}

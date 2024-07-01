@@ -59,9 +59,9 @@ const Classes = () => {
             </View>
           )}
           <View className="flex items-center mt-3 justify-center">
-            <Text className="text-2xl font-pbold">Modify Classes</Text>
+            <Text className="text-2xl font-pbold">Modify Lectures</Text>
             <Text className="font-psemibold text-sm">
-              Tap on a class to modify
+              Tap on a lecture to modify
             </Text>
           </View>
         </View>
@@ -86,9 +86,9 @@ const Classes = () => {
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            buttonText="Add Classes"
-            title="No classes added yet"
-            subtitle="Add classes to mark attendance"
+            buttonText="Add Lectures"
+            title="No lectures added yet"
+            subtitle="Add lectures to mark attendance"
             moveto="editScreen/addClasses"
           />
         )}

@@ -241,7 +241,7 @@ const AddClasses = () => {
             </View>
           </View>
           <CustomButtom
-            title="Add Students"
+            title="Add Lecture"
             textStyles="text-white"
             containerStyles="m-4"
             handlePress={handleSubmit(onSubmit)}

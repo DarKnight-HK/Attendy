@@ -87,9 +87,9 @@ const Home = () => {
               </View>
 
               <View className="flex items-center mt-3 justify-center">
-                <Text className="text-2xl font-pbold">Your classes</Text>
+                <Text className="text-2xl font-pbold">Your lectures</Text>
                 <Text className="font-psemibold text-sm">
-                  Tap on a class to mark attendece
+                  Tap on a lecture to mark attendece
                 </Text>
               </View>
             </View>
@@ -105,9 +105,9 @@ const Home = () => {
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            buttonText="Add Classes"
-            title="No classes Found"
-            subtitle="You have no classes today."
+            buttonText="Add Lectures"
+            title="No lectures Found"
+            subtitle="You have no lectures today."
             moveto="classes"
           />
         )}

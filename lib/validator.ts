@@ -11,10 +11,19 @@ export const validateUsername = (username: string): boolean => {
   return username.length >= 3;
 };
 
-export const validateNumber = (number: string) => {
+export const validateNumber = (number: string, semster?: boolean) => {
   const numericString = number.replace(/[^0-9]/g, "");
   if (numericString === "") {
     return "";
+  }
+  if (semster) {
+    try {
+      if (parseInt(numericString) > 12) {
+        return "12";
+      }
+    } catch (e) {
+      return "";
+    }
   }
   return numericString;
 };

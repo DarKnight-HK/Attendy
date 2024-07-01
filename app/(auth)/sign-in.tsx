@@ -1,7 +1,8 @@
 import FormField from "@/components/FormField";
 import CustomButtom from "@/components/customButton";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
-import { signIn } from "@/lib/appwrite";
+import { getClass, signIn } from "@/lib/appwrite";
+import useAppwrite from "@/lib/useAppwrite";
 import { validateEmail, validatePassword } from "@/lib/validator";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -17,6 +18,7 @@ import {
 
 const SignIn = () => {
   const { setUser, setIsLoggedIn } = useGlobalStore();
+  const { data } = useAppwrite(getClass);
   const submit = async () => {
     try {
       setIsSubmitting(true);
@@ -28,7 +30,12 @@ const SignIn = () => {
         const result = await signIn(form.email.trim(), form.password);
         setUser(result);
         setIsLoggedIn(true);
-        router.push("/home");
+
+        if (data.length === 0)
+          router.replace("/requiredSteps/forcedClassScreen");
+        else {
+          router.replace("/home");
+        }
       }
     } catch (e: any) {
       console.log(e);

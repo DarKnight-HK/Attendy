@@ -157,3 +157,19 @@ export const getClass = async () => {
     console.log(error);
   }
 };
+
+export const createClass = async (name: string, semester: string) => {
+  const intsem = parseInt(semester);
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("Error getting current user");
+    const newClass = await database.createDocument(
+      databaseID,
+      classCollection,
+      ID.unique(),
+      { name, semester: intsem, cr: currentUser.$id }
+    );
+    if (!newClass) throw new Error("Error creating class");
+    return newClass;
+  } catch (error) {}
+};

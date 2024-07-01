@@ -56,7 +56,7 @@ const TabsLayout = () => {
                 } text-xs`}
                 style={{ color: color }}
               >
-                Classes
+                Lectures
               </Text>
             </View>
           ),
