@@ -1,37 +1,129 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Tabs } from "expo-router";
+import {
+  CircleUserRound,
+  ClipboardPenLine,
+  GraduationCap,
+  Home,
+  School,
+} from "lucide-react-native";
+import { View, Text } from "react-native";
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const TabsLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
+        tabBarActiveTintColor: "#000000",
+        tabBarInactiveTintColor: "#9B9B9B",
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          borderTopWidth: 1,
+          borderTopColor: "#F8F8FA",
+          height: 60,
+        },
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          title: "Home",
+          headerShown: false,
+          tabBarIcon: ({ focused, color }) => (
+            <View className="gap-2 flex items-center justify-center">
+              <Home size={24} color={focused ? "black" : "gray"} />
+              <Text
+                className={`${
+                  focused ? "font-psemibold" : "font-pregular"
+                } text-xs`}
+                style={{ color: color }}
+              >
+                Home
+              </Text>
+            </View>
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="classes"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          headerShown: false,
+          title: "Classes",
+          tabBarIcon: ({ focused, color }) => (
+            <View className="gap-2 flex items-center justify-center">
+              <School size={24} color={focused ? "black" : "gray"} />
+              <Text
+                className={`${
+                  focused ? "font-psemibold" : "font-pregular"
+                } text-xs`}
+                style={{ color: color }}
+              >
+                Classes
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="attendence"
+        options={{
+          headerShown: false,
+          title: "Attendence",
+          tabBarIcon: ({ focused, color }) => (
+            <View className="gap-2 flex items-center justify-center">
+              <ClipboardPenLine size={24} color={focused ? "black" : "gray"} />
+              <Text
+                className={`${
+                  focused ? "font-psemibold" : "font-pregular"
+                } text-xs`}
+                style={{ color: color }}
+              >
+                Attendence
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="students"
+        options={{
+          headerShown: false,
+          title: "Students",
+          tabBarIcon: ({ focused, color }) => (
+            <View className="gap-2 flex items-center justify-center">
+              <GraduationCap size={24} color={focused ? "black" : "gray"} />
+              <Text
+                className={`${
+                  focused ? "font-psemibold" : "font-pregular"
+                } text-xs`}
+                style={{ color: color }}
+              >
+                Students
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          headerShown: false,
+          title: "Profile",
+          tabBarIcon: ({ focused, color }) => (
+            <View className="gap-2 flex items-center justify-center">
+              <CircleUserRound size={24} color={focused ? "black" : "gray"} />
+              <Text
+                className={`${
+                  focused ? "font-psemibold" : "font-pregular"
+                } text-xs`}
+                style={{ color: color }}
+              >
+                Profile
+              </Text>
+            </View>
           ),
         }}
       />
     </Tabs>
   );
-}
+};
+
+export default TabsLayout;
