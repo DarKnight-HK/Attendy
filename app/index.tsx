@@ -7,11 +7,15 @@ import { GraduationCap } from "lucide-react-native";
 import { Dimensions, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function Index() {
-  const { data } = useAppwrite(getClass);
   const { isLoading, isLoggedIn } = useGlobalStore();
+  const { data } = useAppwrite(getClass);
   if (!isLoading && isLoggedIn) {
-    if (data && data.length > 0) return <Redirect href="/home" />;
-    else {
+    if (data) {
+      if (data.length > 0) {
+        return <Redirect href="/home" />;
+      }
+    } else {
+      console.log(data[0]);
       return <Redirect href="/requiredSteps/forcedClassScreen" />;
     }
   }

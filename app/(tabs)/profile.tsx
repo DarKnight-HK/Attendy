@@ -5,8 +5,11 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useState } from "react";
 import {
   ArrowRightIcon,
   Camera,
@@ -17,10 +20,13 @@ import {
 import CustomButtom from "@/components/customButton";
 import { router } from "expo-router";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
-import { signOut } from "@/lib/appwrite";
+import { changePfp, getCurrentUser, signOut } from "@/lib/appwrite";
 
 const Profile = () => {
+  const formSchema: { avatar: any } = { avatar: null };
+  const [pfp, setPfp] = useState(formSchema);
   const { user, setIsLoggedIn, setUser } = useGlobalStore();
+  const [loading, setLoading] = useState(false);
   const logout = async () => {
     await signOut();
     setUser(null);
@@ -28,6 +34,37 @@ const Profile = () => {
 
     router.replace("/sign-in");
   };
+  useEffect(() => {}, [user]);
+  const onSub = async () => {
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+      aspect: [1, 1],
+    });
+    if (!result.canceled) {
+      if (result.assets.length > 0)
+        setPfp({ ...pfp, avatar: result.assets[0] });
+    }
+    if (pfp.avatar) {
+      try {
+        setLoading(true);
+        const result = await changePfp(pfp.avatar);
+        if (!result) {
+          throw new Error("Error updating pfp");
+        }
+        const newUser = await getCurrentUser();
+        setUser(newUser);
+        setPfp(formSchema);
+      } catch (error: any) {
+        Alert.alert("Error", error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+  const openPicker = async () => {};
   return (
     <SafeAreaView>
       <View
@@ -37,23 +74,35 @@ const Profile = () => {
         }}
       >
         <View className="flex items-center my-3 justify-center">
-          <TouchableOpacity
-            activeOpacity={0.9}
-            className="size-[84px] my-8 ml-3  rounded-full flex justify-center items-center"
-          >
-            <Image
-              source={{ uri: user?.avatar }}
-              className="rounded-full w-[90%] h-[90%]"
-              resizeMode="cover"
+          {loading && (
+            <ActivityIndicator
+              animating={loading}
+              color="#000000"
+              size="large"
+              className="ml-2"
             />
-            <View className="absolute right-[-7] bottom-[-4] size-9 rounded-lg border flex items-center justify-center border-white bg-black">
-              <Camera color={"white"} />
-            </View>
-          </TouchableOpacity>
+          )}
+          {!loading && (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              className="size-[84px] my-8 ml-3  rounded-full flex justify-center items-center"
+              onPress={onSub}
+              disabled={loading}
+            >
+              <Image
+                source={{ uri: user?.avatar }}
+                className="rounded-full w-[90%] h-[90%]"
+                resizeMode="cover"
+              />
+              <View className="absolute right-[-7] bottom-[-4] size-9 rounded-lg border flex items-center justify-center border-white bg-black">
+                <Camera color={"white"} />
+              </View>
+            </TouchableOpacity>
+          )}
           <View className="flex items-center justify-center gap-y-2">
             <Text className="font-pbold text-2xl">{user?.username}</Text>
             <Text className="text-base text-black font-pregular">
-              {user?.bio}
+              {user?.bio === '""' ? "" : user?.bio}
             </Text>
           </View>
         </View>
@@ -62,7 +111,7 @@ const Profile = () => {
             title="Edit Profile"
             containerStyles="w-full"
             textStyles="text-white"
-            handlePress={() => {}}
+            handlePress={() => router.push("/editScreen/settings/editProfile")}
           />
         </View>
         <TouchableOpacity

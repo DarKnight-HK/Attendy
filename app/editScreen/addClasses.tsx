@@ -20,8 +20,11 @@ import { useForm, Controller } from "react-hook-form";
 import CustomButtom from "@/components/customButton";
 import { useState } from "react";
 import { validateNumber } from "@/lib/validator";
+import { createLecture } from "@/lib/appwrite";
+import { router } from "expo-router";
 
 const AddClasses = () => {
+  const [loading, setloading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const toggleDatePicker = () => setShowPicker(!showPicker);
@@ -67,21 +70,41 @@ const AddClasses = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data: any) => {
-    console.log("entered data", data);
-    Alert.alert("Successful", JSON.stringify(data));
+  const onSubmit = async (data: any) => {
+    try {
+      setloading(true);
+      console.log(data);
+      const result = await createLecture(
+        data.subject,
+        data.teacher,
+        data.creditHours,
+        data.duration,
+        data.time,
+        data.day
+      );
+      if (!result) {
+        throw new Error("Error creating lecture");
+      }
+      Alert.alert("Success", "Lecture added successfully");
+      router.replace("/classes");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+      console.log(error.message);
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
     <SafeAreaView className="h-full">
       <ScrollView>
         <View style={{ minHeight: Dimensions.get("window").height - 100 }}>
-          <View className="items-center mt-4">
+          <View className="items-center mt-8">
             <Text className="text-xl font-pbold">
               Adding lectures for {today}
             </Text>
           </View>
-          <View className="m-3 gap-y-4">
+          <View className="m-3 gap-y-4 mt-[100px]">
             <View>
               <Controller
                 control={control}
@@ -243,7 +266,8 @@ const AddClasses = () => {
           <CustomButtom
             title="Add Lecture"
             textStyles="text-white"
-            containerStyles="m-4"
+            isLoading={loading}
+            containerStyles="mx-4 mt-8"
             handlePress={handleSubmit(onSubmit)}
           />
         </View>

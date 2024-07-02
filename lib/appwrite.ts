@@ -15,8 +15,10 @@ import {
   Account,
   ID,
   Avatars,
+  Storage,
   Databases,
   Query,
+  ImageGravity,
 } from "react-native-appwrite";
 const client = new Client();
 
@@ -36,6 +38,7 @@ client.setEndpoint(endpoint).setProject(project).setPlatform(platform);
 const account = new Account(client);
 const avatars = new Avatars(client);
 const database = new Databases(client);
+const storage = new Storage(client);
 export const createUser = async (
   email: string,
   password: string,
@@ -171,5 +174,135 @@ export const createClass = async (name: string, semester: string) => {
     );
     if (!newClass) throw new Error("Error creating class");
     return newClass;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const createLecture = async (
+  name: string,
+  teacher: string,
+  creditHours: string,
+  duration: string,
+  time: Date,
+  day: number
+) => {
+  const intCh = parseInt(creditHours);
+  const intDur = parseInt(duration);
+  try {
+    const currentClass = await getClass();
+    if (!currentClass) throw new Error("Error getting class");
+    const newLecture = await database.createDocument(
+      databaseID,
+      lecturesCollection,
+      ID.unique(),
+      {
+        name,
+        teacher,
+        credit_hours: intCh,
+        duration: intDur,
+        time,
+        day,
+        classes: currentClass[0].$id,
+      }
+    );
+    if (!newLecture) throw new Error("Error creating lecture");
+    return newLecture;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export async function getFilePreview(fileId: string) {
+  let fileUrl;
+
+  try {
+    fileUrl = storage.getFilePreview(
+      storageID,
+      fileId,
+      2000,
+      2000,
+      ImageGravity.Top,
+      100
+    );
+
+    if (!fileUrl) throw Error;
+
+    return fileUrl;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}
+
+export const uploadFile = async (file: any) => {
+  const asset = {
+    name: file.fileName,
+    type: file.mimeType,
+    size: file.fileSize,
+    uri: file.uri,
+  };
+  try {
+    const uploadedFile = await storage.createFile(
+      storageID,
+      ID.unique(),
+      asset
+    );
+    console.log("uploaded", uploadedFile.$id);
+    const fileUrl = await getFilePreview(uploadedFile.$id);
+    return fileUrl;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const createStudent = async (
+  name: string,
+  roll_no: string,
+  avatar?: any
+) => {
+  try {
+    let avatarURL;
+    if (avatar) {
+      avatarURL = await uploadFile(avatar);
+    }
+    if (!avatar) {
+      avatarURL = avatars.getInitials(name);
+    }
+    console.log(avatarURL);
+    const className = await getClass();
+    if (!className) throw new Error("Error getting class");
+    const newStudent = await database.createDocument(
+      databaseID,
+      studentsCollection,
+      ID.unique(),
+      { name, roll_no, avatar: avatarURL, class: className[0].$id }
+    );
+    if (!newStudent) throw new Error("Error creating student");
+    return newStudent;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const changePfp = async (avatar: any) => {
+  const avatarUrl = await uploadFile(avatar);
+
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      throw new Error("Error getting user");
+    }
+    const newItem = await database.updateDocument(
+      databaseID,
+      userCollection,
+      currentUser.$id,
+      {
+        avatar: avatarUrl,
+      }
+    );
+    if (!newItem) throw new Error("Error updating data");
+    return newItem;
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -40,7 +40,7 @@ const Students = () => {
         keyboardShouldPersistTaps="always"
         estimatedItemSize={90}
         data={students}
-        keyExtractor={(item, index) => item.id + index}
+        keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View className="gap-2">
             <StudentCard
