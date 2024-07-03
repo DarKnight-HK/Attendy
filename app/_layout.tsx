@@ -45,7 +45,7 @@ const RootLayout = () => {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-          name="editScreen/[manageClasses]"
+          name="editScreen/[classID]"
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -53,7 +53,7 @@ const RootLayout = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="editScreen/students/[manageStudents]"
+          name="editScreen/students/[studentID]"
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -66,6 +66,14 @@ const RootLayout = () => {
         />
         <Stack.Screen
           name="editScreen/settings/editProfile"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="attendenceScreen/[classID]"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="attendenceScreen/statistics/[classID]"
           options={{ headerShown: false }}
         />
       </Stack>

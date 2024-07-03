@@ -1,6 +1,5 @@
-import { getCurrentUser } from "@/lib/appwrite";
+import { getCurrentUser, getStudents } from "@/lib/appwrite";
 import { getCurrentDay } from "@/lib/utils";
-import { useEffect } from "react";
 import { create } from "zustand";
 
 interface Store {
@@ -12,6 +11,10 @@ interface Store {
   setIsLoading: (value: boolean) => void;
   currentDay: number;
   setCurrentDay: (value: number) => void;
+  presentStudents: any[];
+  setPresentStudents: (value: any[]) => void;
+  absentStudents: any[];
+  setAbsentStudents: (value: any[]) => void;
 }
 
 export const useGlobalStore = create<Store>()((set) => ({
@@ -38,4 +41,8 @@ export const useGlobalStore = create<Store>()((set) => ({
   },
   currentDay: getCurrentDay(),
   setCurrentDay: (value: number) => set({ currentDay: value }),
+  presentStudents: [],
+  setPresentStudents: (value: any[]) => set({ presentStudents: value }),
+  absentStudents: [],
+  setAbsentStudents: (value: any[]) => set({ absentStudents: value }),
 }));

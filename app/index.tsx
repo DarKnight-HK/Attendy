@@ -15,7 +15,6 @@ export default function Index() {
         return <Redirect href="/home" />;
       }
     } else {
-      console.log(data[0]);
       return <Redirect href="/requiredSteps/forcedClassScreen" />;
     }
   }

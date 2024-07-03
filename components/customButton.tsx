@@ -7,6 +7,7 @@ interface Props {
   containerStyles?: string;
   textStyles?: string;
   isLoading?: boolean;
+  activityIndicatorColor?: string;
 }
 
 const CustomButtom = ({
@@ -15,6 +16,7 @@ const CustomButtom = ({
   containerStyles,
   textStyles,
   isLoading,
+  activityIndicatorColor,
 }: Props) => {
   return (
     <TouchableOpacity
@@ -33,7 +35,7 @@ const CustomButtom = ({
       {isLoading && (
         <ActivityIndicator
           animating={isLoading}
-          color="#fff"
+          color={activityIndicatorColor || "#ffffff"}
           size="small"
           className="ml-2"
         />

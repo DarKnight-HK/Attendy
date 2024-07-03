@@ -3,8 +3,10 @@ import React from "react";
 import ClockIcon from "./clockIcon";
 import { router } from "expo-router";
 import { cn, formatTime } from "@/lib/utils";
+import useAppwrite from "@/lib/useAppwrite";
 
 const CustomCard = ({
+  id,
   title,
   time,
   teacher,
@@ -12,6 +14,7 @@ const CustomCard = ({
   isEditable,
   isHappening,
 }: {
+  id?: string;
   title: string;
   time: string;
   teacher: string;
@@ -23,8 +26,8 @@ const CustomCard = ({
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => {
-        if (isEditable) router.push("editScreen/manageClasses");
-        else router.push("attendence");
+        if (isEditable) router.push(`editScreen/${id}`);
+        else router.push(`attendenceScreen/${id}`);
       }}
       className=" flex-row ml-2 mr-2 mb-1 items-center rounded-xl drop-shadow-sm border-2 border-[#eee8e8] max-h-[60px] min-h-[60px] bg-[#FEFEFE] flex-1"
     >

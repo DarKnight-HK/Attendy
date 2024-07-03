@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const ManageClasses = () => {
+const StatisticsScreen = () => {
   return (
     <View>
-      <Text>ManageClasses</Text>
+      <Text>StatisticsScreen</Text>
     </View>
   );
 };
 
-export default ManageClasses;
+export default StatisticsScreen;

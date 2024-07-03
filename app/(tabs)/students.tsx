@@ -44,6 +44,7 @@ const Students = () => {
         renderItem={({ item }) => (
           <View className="gap-2">
             <StudentCard
+              id={item.$id}
               managing={false}
               rollNo={item.roll_no}
               name={item.name}

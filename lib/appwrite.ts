@@ -117,6 +117,21 @@ export const getLectures = async (day: number) => {
     console.log(error);
   }
 };
+
+export const getSpecificLecture = async (lectureID: any) => {
+  try {
+    const lecture = await database.listDocuments(
+      databaseID,
+      lecturesCollection,
+      [Query.equal("$id", lectureID)]
+    );
+    if (!lecture) throw new Error("Error getting lecture");
+    return lecture.documents;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getStudents = async () => {
   try {
     const students = await database.listDocuments(
@@ -302,6 +317,143 @@ export const changePfp = async (avatar: any) => {
     );
     if (!newItem) throw new Error("Error updating data");
     return newItem;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getStudentData = async (studentID: any) => {
+  try {
+    const student = await database.listDocuments(
+      databaseID,
+      studentsCollection,
+      [Query.equal("$id", studentID)]
+    );
+    if (!student) throw new Error("Error getting student");
+    return student.documents;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteStudent = async (studentID: any) => {
+  try {
+    const student = await database.deleteDocument(
+      databaseID,
+      studentsCollection,
+      studentID
+    );
+    if (!student) throw new Error("Error deleting student");
+    return student;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateStudent = async (
+  id: any,
+  name: string,
+  roll_no: string,
+  avatar: any
+) => {
+  try {
+    let avatarURL;
+    if (typeof avatar === "string") {
+      avatarURL = avatar;
+      const newItem = await database.updateDocument(
+        databaseID,
+        studentsCollection,
+        id,
+        {
+          name,
+          roll_no,
+        }
+      );
+      if (!newItem) throw new Error("Error updating data");
+      return newItem;
+    } else {
+      avatarURL = await uploadFile(avatar);
+
+      const newItem = await database.updateDocument(
+        databaseID,
+        studentsCollection,
+        id,
+        {
+          name,
+          roll_no,
+          avatar: avatarURL,
+        }
+      );
+      if (!newItem) throw new Error("Error updating data");
+      return newItem;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const editLecture = async (
+  id: any,
+  name: string,
+  teacher: string,
+  creditHours: number,
+  duration: number,
+  time: string
+) => {
+  try {
+    const newLecture = await database.updateDocument(
+      databaseID,
+      lecturesCollection,
+      id,
+      {
+        name,
+        teacher,
+        credit_hours: creditHours,
+        duration,
+        time,
+      }
+    );
+    if (!newLecture) throw new Error("Error editing lecture");
+    return newLecture;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteLecture = async (lectureID: any) => {
+  try {
+    const lecture = await database.deleteDocument(
+      databaseID,
+      lecturesCollection,
+      lectureID
+    );
+    if (!lecture) throw new Error("Error deleting lecture");
+    return lecture;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const markAttendence = async (
+  lectureID: any,
+  presentStudents: any[],
+  absentStudents: any[],
+  date: Date
+) => {
+  try {
+    const newAttendence = await database.createDocument(
+      databaseID,
+      attendenceCollection,
+      ID.unique(),
+      {
+        lecture: lectureID,
+        present_students: presentStudents,
+        absent_students: absentStudents,
+        date: date.toISOString(),
+      }
+    );
+    if (!newAttendence) throw new Error("Error marking attendence");
+    return newAttendence;
   } catch (error) {
     console.log(error);
   }

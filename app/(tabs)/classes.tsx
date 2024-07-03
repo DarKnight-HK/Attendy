@@ -76,6 +76,7 @@ const Classes = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <CustomCard
+            id={item.$id}
             title={item.name}
             time={item.time}
             teacher={item.teacher}

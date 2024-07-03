@@ -42,12 +42,14 @@ const Home = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <CustomCard
+            marked={item.marked}
+            id={item.$id}
             title={item.name}
             time={item.time}
             teacher={item.teacher}
             isFinished={checkFinished(item.time, item.duration)}
             isHappening={checkHappening(item.time, item.duration)}
-            isEditable={true}
+            isEditable={false}
           />
         )}
         ListHeaderComponent={() => (
