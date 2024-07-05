@@ -84,3 +84,7 @@ export const getCurrentDayName = (idx?: number) => {
   }
   return days[getCurrentDay()];
 };
+
+export const checkPresent = (data: any[], id: string) => {
+  return data.includes(id);
+};

@@ -1,9 +1,8 @@
 import { View, Text, TouchableOpacity, Switch, Image } from "react-native";
-import React, { useEffect, useState } from "react";
-import ClockIcon from "./clockIcon";
-import { router } from "expo-router";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { useGlobalStore } from "@/hooks/useGlobalStore";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { checkMarked } from "@/lib/appwrite";
 
 const StudentCard = ({
   id,
@@ -11,27 +10,80 @@ const StudentCard = ({
   rollNo,
   imageUrl,
   managing,
+  classID,
+  time,
+  setChanging,
 }: {
   id: string;
   name: string;
   rollNo: string;
   imageUrl?: string;
   managing: boolean;
+  allIDs: any[];
+  classID?: any;
+  time?: any;
+  setChanging?: any;
 }) => {
-  const {
-    presentStudents,
-    setPresentStudents,
-    absentStudents,
-    setAbsentStudents,
-  } = useGlobalStore();
-  const [present, setPresent] = useState(false);
+  const queryClient = useQueryClient();
+  let { data, isLoading } = useQuery({
+    initialData: [{ absent_students: [] }],
+    queryKey: ["checkMarked", classID, time],
+    queryFn: async () => {
+      const data = await checkMarked(classID, new Date());
+      if (data && data?.length > 0) {
+        const d = [
+          {
+            absent_students: [
+              ...data[0]?.absent_students.map((item: any) => item.$id),
+            ],
+          },
+        ];
+        return d;
+      }
+      return [{ absent_students: [] }];
+    },
+  });
+  const [present, setPresent] = useState(
+    data[0]?.absent_students.includes(id) ? false : true
+  );
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      setPresent((prevPresent) => !prevPresent);
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["checkMarked", classID, time],
+        (oldData?: any[]) => {
+          if (oldData && oldData.length > 0) {
+            let newData = [...oldData];
+            let absentStudents = newData[0]?.absent_students || [];
+
+            if (absentStudents.includes(id)) {
+              absentStudents = absentStudents.filter(
+                (studentId: any) => studentId !== id
+              );
+            } else {
+              absentStudents = [...absentStudents, id];
+            }
+
+            newData[0] = {
+              ...newData[0],
+              absent_students: absentStudents,
+            };
+            console.log(newData[0].absent_students);
+            return newData;
+          } else {
+            return [{ absent_students: [] }];
+          }
+        }
+      );
+    },
+  });
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={() => {
-        router.push(`/editScreen/students/${id}`);
-      }}
+      onPress={() => {}}
       className={cn(
         "flex-row mr-[8px] ml-[8px] my-[2px] items-center rounded-xl  border-2 border-[#eee8e8] max-h-[60px] min-h-[60px] bg-[#FEFEFE] flex-1 justify-between"
       )}
@@ -51,18 +103,10 @@ const StudentCard = ({
       {managing && (
         <View className="ml-auto flex-col items-center">
           <Switch
+            disabled={isLoading}
             value={present}
             onValueChange={() => {
-              setPresent(!present);
-              if (present) {
-                setPresentStudents(
-                  presentStudents.filter((item) => item !== id)
-                );
-                setAbsentStudents([...absentStudents, id]);
-              } else {
-                setAbsentStudents(absentStudents.filter((item) => item !== id));
-                setPresentStudents([...presentStudents, id]);
-              }
+              mutate();
             }}
             trackColor={{ false: "#e3e3e6", true: "#000000" }}
             thumbColor={present ? "#d1dbd5" : "#ffffff"}

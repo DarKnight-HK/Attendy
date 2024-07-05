@@ -436,18 +436,17 @@ export const deleteLecture = async (lectureID: any) => {
 
 export const markAttendence = async (
   lectureID: any,
-  presentStudents: any[],
   absentStudents: any[],
   date: Date
 ) => {
   try {
+    console.log("Mark function called for id: ", absentStudents);
     const newAttendence = await database.createDocument(
       databaseID,
       attendenceCollection,
       ID.unique(),
       {
         lecture: lectureID,
-        present_students: presentStudents,
         absent_students: absentStudents,
         marked_at: date.toISOString(),
         only_date: date.toLocaleDateString(),
@@ -459,18 +458,14 @@ export const markAttendence = async (
     console.log(error);
   }
 };
-export const updateAttendence = async (
-  present_students: any[],
-  absent_students: any[],
-  id: any
-) => {
+export const updateAttendence = async (absent_students: any[], id: any) => {
   try {
+    console.log("Update function called for id: ", id);
     const newAttendence = await database.updateDocument(
       databaseID,
       attendenceCollection,
       id,
       {
-        present_students: present_students,
         absent_students: absent_students,
       }
     );

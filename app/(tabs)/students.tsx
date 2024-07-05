@@ -1,10 +1,11 @@
 import EmptyState from "@/components/emptyState";
 import FloatingButton from "@/components/floatingButton";
 import SearchBox from "@/components/searchBox";
-import StudentCard from "@/components/studentCard";
+import SimpleStudentCard from "@/components/simpleStudentcard";
 import { getClass, getStudents } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import { FlashList } from "@shopify/flash-list";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -17,9 +18,21 @@ import {
 const Students = () => {
   const {
     data: students,
+    isLoading: studentLoader,
     refetch,
-    loading: studentLoader,
-  } = useAppwrite(getStudents);
+  } = useQuery({
+    initialData: [],
+    queryKey: ["students"],
+    queryFn: async () => {
+      try {
+        const data = await getStudents();
+        return data;
+      } catch (error) {
+        console.log("Error in fetching students: ", error);
+        return [];
+      }
+    },
+  });
   const { data: classN, loading: classLoader } = useAppwrite(getClass);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -43,9 +56,8 @@ const Students = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View className="gap-2">
-            <StudentCard
+            <SimpleStudentCard
               id={item.$id}
-              managing={false}
               rollNo={item.roll_no}
               name={item.name}
               imageUrl={item.avatar}
