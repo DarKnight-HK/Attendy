@@ -449,11 +449,50 @@ export const markAttendence = async (
         lecture: lectureID,
         present_students: presentStudents,
         absent_students: absentStudents,
-        date: date.toISOString(),
+        marked_at: date.toISOString(),
+        only_date: date.toLocaleDateString(),
       }
     );
     if (!newAttendence) throw new Error("Error marking attendence");
     return newAttendence;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const updateAttendence = async (
+  present_students: any[],
+  absent_students: any[],
+  id: any
+) => {
+  try {
+    const newAttendence = await database.updateDocument(
+      databaseID,
+      attendenceCollection,
+      id,
+      {
+        present_students: present_students,
+        absent_students: absent_students,
+      }
+    );
+    if (!newAttendence) throw new Error("Error updating attendence");
+    return newAttendence;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const checkMarked = async (lectureID: any, date: Date) => {
+  try {
+    const attendence = await database.listDocuments(
+      databaseID,
+      attendenceCollection,
+      [
+        Query.equal("lecture", lectureID),
+        Query.equal("only_date", date.toLocaleDateString()),
+      ]
+    );
+    if (attendence.documents.length > 0) return attendence.documents;
+    else return [];
   } catch (error) {
     console.log(error);
   }

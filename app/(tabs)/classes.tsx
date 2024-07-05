@@ -80,8 +80,8 @@ const Classes = () => {
             title={item.name}
             time={item.time}
             teacher={item.teacher}
-            isFinished={checkFinished(item.time, item.duration)}
-            isHappening={checkHappening(item.time, item.duration)}
+            isFinished={checkFinished(item.time, item.duration, currentDay)}
+            isHappening={checkHappening(item.time, item.duration, currentDay)}
             isEditable={true}
           />
         )}

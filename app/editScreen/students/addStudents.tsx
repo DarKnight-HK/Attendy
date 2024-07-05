@@ -30,6 +30,7 @@ const AddStudents = () => {
 
   const onSubmit = async (data: any) => {
     try {
+      setUploading(true);
       if (!data.name || data.name.length < 2) {
         Alert.alert("Error", "Name should be greater than 2 characters");
         return;
@@ -37,12 +38,10 @@ const AddStudents = () => {
         Alert.alert("Error", "Roll No is required");
         return;
       }
-      setUploading(true);
       const result = await createStudent(data.name, data.roll_no, data.avatar);
       if (result) {
         Alert.alert("Success", "Student added successfully");
         setForm(formSchema);
-        setUploading(false);
         router.replace("students");
       }
     } catch (error: any) {
@@ -129,6 +128,8 @@ const AddStudents = () => {
                 )}
               </TouchableOpacity>
             </View>
+          </View>
+          <View className="w-full">
             <CustomButtom
               title="Add Student"
               handlePress={() => onSubmit(form)}

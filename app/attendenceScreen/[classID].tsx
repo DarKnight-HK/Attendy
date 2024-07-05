@@ -6,19 +6,22 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import React, { useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import StudentCard from "@/components/studentCard";
 import EmptyState from "@/components/emptyState";
 import useAppwrite from "@/lib/useAppwrite";
 import {
+  checkMarked,
   getSpecificLecture,
   getStudents,
   markAttendence,
+  updateAttendence,
 } from "@/lib/appwrite";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import CustomButtom from "@/components/customButton";
+import { useQuery } from "@tanstack/react-query";
 
 const MarkAttendece = () => {
   const { classID } = useLocalSearchParams();
@@ -30,6 +33,17 @@ const MarkAttendece = () => {
   const { data: classN, loading: classLoader } = useAppwrite(() =>
     getSpecificLecture(classID)
   );
+  // const { data: attendy, loading } = useAppwrite(() =>
+  //   checkMarked(classID, new Date())
+  // );
+  const { data, isLoading } = useQuery({
+    queryKey: ["checkMarked", classID],
+    queryFn: async () => {
+      const data = await checkMarked(classID, new Date());
+      return data;
+    },
+  });
+  console.log(data);
   const allIDs = students.map((student) => student.$id);
   const {
     presentStudents,
@@ -37,13 +51,25 @@ const MarkAttendece = () => {
     absentStudents,
     setPresentStudents,
   } = useGlobalStore();
-  useEffect(() => {
-    setPresentStudents(allIDs);
-    return () => {
-      setAbsentStudents([]);
-      setPresentStudents([]);
-    };
-  }, [students]);
+  // if (loading === false) {
+  //   setPresentStudents(
+  //     attendy[0]?.present_students.map((item: any) => item.$id)
+  //   );
+  //   setAbsentStudents(attendy[0]?.absent_students.map((item: any) => item.$id));
+  //   console.log("Present: ", presentStudents);
+  // }
+  // if (attendy.length > 0) {
+  //   const p = attendy[0]?.present_students.map((item: any) => item.$id);
+  //   const a = attendy[0]?.absent_students.map((item: any) => item.$id);
+  //   setAbsentStudents(a);
+  //   setPresentStudents(p);
+  // } else
+  // setPresentStudents(allIDs);
+
+  let marked = false;
+  // if (attendy && attendy?.length > 0) {
+  //   marked = true;
+  // }
   const [refreshing, setRefreshing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const onRefresh = async () => {
@@ -51,34 +77,47 @@ const MarkAttendece = () => {
     await refetch();
     setRefreshing(false);
   };
-
-  const onSubmit = async () => {
-    try {
-      setSubmitting(true);
-      const attendence = await markAttendence(
-        classID,
-        presentStudents,
-        absentStudents
-      );
-      if (attendence) {
-        Alert.alert("Success", "Attendence marked successfully");
-      }
-      router.replace("/home");
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const lectureTime = new Date(classN[0]?.time).toLocaleTimeString();
+  // const onSubmit = async () => {
+  //   try {
+  //     setSubmitting(true);
+  //     if (!marked) {
+  //       const attendence = await markAttendence(
+  //         classID,
+  //         presentStudents,
+  //         absentStudents,
+  //         new Date()
+  //       );
+  //       if (attendence) {
+  //         Alert.alert("Success", "Attendence marked successfully");
+  //       }
+  //       router.replace("/home");
+  //     } else {
+  //       const attendence = await updateAttendence(
+  //         presentStudents,
+  //         absentStudents,
+  //         attendy[0].$id
+  //       );
+  //       if (attendence) {
+  //         Alert.alert("Success", "Attendence marked successfully");
+  //       }
+  //       router.replace("/home");
+  //     }
+  //   } catch (error: any) {
+  //     Alert.alert("Error", error.message);
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
 
   return (
     <SafeAreaView className="h-full">
       <View className="absolute w-full  z-10  bottom-0 bg-[#FEFEFE] h-[60px] border-t-2 border-gray-200">
         <View className="size-full p-2 mb-2">
           <CustomButtom
-            title="Submit"
+            title={marked ? "Update Attendence" : "Mark Attendence"}
             isLoading={submitting}
-            handlePress={onSubmit}
+            handlePress={() => {}}
             textStyles="text-white"
             containerStyles="mx-4"
           />
@@ -106,7 +145,7 @@ const MarkAttendece = () => {
               <View className="mb-6">
                 <View>
                   <Text className="font-pmedium text-sm">
-                    Marking attendence for
+                    {marked ? `Updating` : `Marking`} attendence for
                   </Text>
                   {classLoader && (
                     <ActivityIndicator
@@ -122,15 +161,18 @@ const MarkAttendece = () => {
                         {classN[0]?.name}
                       </Text>
                       <Text className="text-xs font-zinc-500">
-                        {new Date(classN[0]?.time).toLocaleString()}
+                        {lectureTime}
                       </Text>
                     </View>
                   )}
                 </View>
                 <View className="flex items-center mt-3 justify-center">
-                  <Text className="text-2xl font-pbold">Students</Text>
+                  <Text className="text-2xl font-pbold">
+                    {marked ? `Updating` : `Students`}
+                  </Text>
                   <Text className="font-psemibold text-sm">
-                    Mark attendence by clicking on the switch
+                    {marked ? `Update` : `Mark`} attendence by clicking on the
+                    switch
                   </Text>
                 </View>
               </View>

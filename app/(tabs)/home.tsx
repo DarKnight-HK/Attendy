@@ -42,7 +42,6 @@ const Home = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <CustomCard
-            marked={item.marked}
             id={item.$id}
             title={item.name}
             time={item.time}

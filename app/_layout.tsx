@@ -4,7 +4,7 @@ import "react-native-url-polyfill/auto";
 import "../global.css";
 import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 SplashScreen.preventAutoHideAsync();
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -33,50 +33,53 @@ const RootLayout = () => {
   if (!fontsLoaded && !error) {
     return null;
   }
+  const queryClient = new QueryClient();
   return (
     <>
-      <StatusBar style="dark" />
-      <Stack>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="requiredSteps/forcedClassScreen"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="editScreen/[classID]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="editScreen/addClasses"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="editScreen/students/[studentID]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="editScreen/students/addStudents"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="editScreen/settings/settings"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="editScreen/settings/editProfile"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="attendenceScreen/[classID]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="attendenceScreen/statistics/[classID]"
-          options={{ headerShown: false }}
-        />
-      </Stack>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style="dark" />
+        <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="requiredSteps/forcedClassScreen"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="editScreen/[classID]"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="editScreen/addClasses"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="editScreen/students/[studentID]"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="editScreen/students/addStudents"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="editScreen/settings/settings"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="editScreen/settings/editProfile"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="attendenceScreen/[classID]"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="attendenceScreen/statistics/[classID]"
+            options={{ headerShown: false }}
+          />
+        </Stack>
+      </QueryClientProvider>
     </>
   );
 };

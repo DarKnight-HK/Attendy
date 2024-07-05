@@ -6,20 +6,45 @@ export const cn = (...args: ClassValue[]) => {
   return twMerge(clsx(...args));
 };
 
-export const checkFinished = (date: string, duration: number) => {
+export const checkFinished = (
+  date: string,
+  duration: number,
+  currentDay?: number
+) => {
+  if (currentDay && currentDay !== getCurrentDay()) return false;
   const now = new Date();
   const lectureDate = new Date(date);
-  const diffinMinutes = (now.getTime() - lectureDate.getTime()) / 60000;
+  const nowHours = now.getHours();
+  const nowMinutes = now.getMinutes();
+  const lectureHours = lectureDate.getHours();
+  const lectureMinutes = lectureDate.getMinutes();
+
+  const nowInMinutes = nowHours * 60 + nowMinutes;
+  const lectureInMinutes = lectureHours * 60 + lectureMinutes;
+
+  const diffinMinutes = nowInMinutes - lectureInMinutes;
+
   return diffinMinutes >= duration;
 };
 
-export const checkHappening = (date: string, duration: number) => {
+export const checkHappening = (
+  date: string,
+  duration: number,
+  currentDay?: number
+) => {
+  if (currentDay && currentDay !== getCurrentDay()) return false;
   const now = new Date();
   const lectureDate = new Date(date);
+  const nowHours = now.getHours();
+  const nowMinutes = now.getMinutes();
+  const lectureHours = lectureDate.getHours();
+  const lectureMinutes = lectureDate.getMinutes();
 
-  const diffInMilliseconds = now.getTime() - lectureDate.getTime();
+  const nowInMinutes = nowHours * 60 + nowMinutes;
+  const lectureInMinutes = lectureHours * 60 + lectureMinutes;
 
-  const diffInMinutes = diffInMilliseconds / 60000;
+  const diffInMinutes = nowInMinutes - lectureInMinutes;
+
   return diffInMinutes >= 0 && diffInMinutes < duration;
 };
 

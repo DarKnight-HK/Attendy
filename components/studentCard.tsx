@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Switch, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ClockIcon from "./clockIcon";
 import { router } from "expo-router";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,8 @@ const StudentCard = ({
     absentStudents,
     setAbsentStudents,
   } = useGlobalStore();
-  const [present, setPresent] = useState(presentStudents.includes(id));
+  const [present, setPresent] = useState(false);
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
