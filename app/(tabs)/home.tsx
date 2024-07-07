@@ -16,13 +16,26 @@ import useAppwrite from "@/lib/useAppwrite";
 import { getLectures } from "@/lib/appwrite";
 import { checkFinished, checkHappening, getCurrentDay } from "@/lib/utils";
 import { router } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
 
 const Home = () => {
   const {
     data: lectures,
+    isLoading: dataLoading,
     refetch,
-    loading: dataLoading,
-  } = useAppwrite(() => getLectures(getCurrentDay()));
+  } = useQuery({
+    initialData: [],
+    queryKey: ["lectures"],
+    queryFn: async () => {
+      try {
+        const data = await getLectures(getCurrentDay());
+        return data;
+      } catch (error) {
+        console.log("Error in fetching lectures: ", error);
+        return [];
+      }
+    },
+  });
 
   const { user, isLoading: userLoading } = useGlobalStore();
   const [refreshing, setRefreshing] = useState(false);

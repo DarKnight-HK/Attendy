@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Switch, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Switch,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -25,6 +32,7 @@ const StudentCard = ({
   setChanging?: any;
 }) => {
   const queryClient = useQueryClient();
+
   let { data, isLoading } = useQuery({
     initialData: [{ absent_students: [] }],
     queryKey: ["checkMarked", classID, time],
@@ -48,6 +56,7 @@ const StudentCard = ({
   );
   const { mutate } = useMutation({
     mutationFn: async () => {
+      setChanging(true);
       setPresent((prevPresent) => !prevPresent);
     },
     onSuccess: () => {
@@ -70,7 +79,7 @@ const StudentCard = ({
               ...newData[0],
               absent_students: absentStudents,
             };
-            console.log(newData[0].absent_students);
+            setChanging(false);
             return newData;
           } else {
             return [{ absent_students: [] }];
@@ -79,7 +88,13 @@ const StudentCard = ({
       );
     },
   });
-
+  if (isLoading) {
+    return (
+      <View className="h-full items-center justify-center">
+        <ActivityIndicator size="large" color="#000000" />
+      </View>
+    );
+  }
   return (
     <TouchableOpacity
       activeOpacity={0.7}

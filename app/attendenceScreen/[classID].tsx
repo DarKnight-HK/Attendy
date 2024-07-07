@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import StudentCard from "@/components/studentCard";
@@ -72,7 +72,6 @@ const MarkAttendece = () => {
       return [{ absent_students: [] }];
     },
   });
-  useEffect(() => {}, [isLoading]);
   console.log("Total data: ", data);
   const [submitting, setSubmitting] = useState(false);
   const onRefresh = async () => {
@@ -128,7 +127,7 @@ const MarkAttendece = () => {
         <View className="size-full p-2 mb-2">
           <CustomButtom
             title={marked ? "Update Attendence" : "Mark Attendence"}
-            isLoading={submitting}
+            isLoading={submitting && changing}
             handlePress={onSubmit}
             textStyles="text-white"
             containerStyles="mx-4"
@@ -144,6 +143,7 @@ const MarkAttendece = () => {
           renderItem={({ item }) => (
             <View className="gap-2">
               <StudentCard
+                setChanging={setChanging}
                 classID={classID}
                 time={classN[0]?.time}
                 id={item.$id}
