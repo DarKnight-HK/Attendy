@@ -8,6 +8,7 @@ interface Props {
   textStyles?: string;
   isLoading?: boolean;
   activityIndicatorColor?: string;
+  disabled?: boolean;
 }
 
 const CustomButtom = ({
@@ -16,11 +17,12 @@ const CustomButtom = ({
   containerStyles,
   textStyles,
   isLoading,
+  disabled,
   activityIndicatorColor,
 }: Props) => {
   return (
     <TouchableOpacity
-      disabled={isLoading}
+      disabled={isLoading || disabled}
       onPress={handlePress}
       activeOpacity={0.7}
       className={cn(

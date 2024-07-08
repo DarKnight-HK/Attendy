@@ -1,39 +1,16 @@
+import CustomButtom from "@/components/customButton";
 import { getLectures, getStudents } from "@/lib/appwrite";
 import { getCurrentDay } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
+import { useState } from "react";
 import { Text, View, SafeAreaView, Dimensions, ScrollView } from "react-native";
-
+import { Calendar } from "react-native-calendars";
 const Attendence = () => {
-  const { data: students, isLoading: studentLoader } = useQuery({
-    initialData: [],
-    queryKey: ["students"],
-    queryFn: async () => {
-      try {
-        const data = await getStudents();
-        return data;
-      } catch (error) {
-        console.log("Error in fetching students: ", error);
-        return [];
-      }
-    },
-  });
-  const {
-    data: lectures,
-    isLoading: dataLoading,
-    refetch,
-  } = useQuery({
-    initialData: [],
-    queryKey: ["lectures"],
-    queryFn: async () => {
-      try {
-        const data = await getLectures(getCurrentDay());
-        return data;
-      } catch (error) {
-        console.log("Error in fetching lectures: ", error);
-        return [];
-      }
-    },
-  });
+  const [selectedDate, setSelectedDate] = useState("");
+  const [timeStamp, settimeStamp] = useState(0);
+  const [disabled, setDisabled] = useState(true);
+
   return (
     <SafeAreaView className="h-full">
       <ScrollView>
@@ -43,8 +20,55 @@ const Attendence = () => {
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
-          <View className="mt-6">
+          <View className="mt-6 items-center">
             <Text className="font-pbold text-2xl">Attendence Report</Text>
+            <Text className="font-pregular text-base">
+              Choose a date to check statistics
+            </Text>
+          </View>
+
+          <View className="justify-center items-center mt-[50px]">
+            <Calendar
+              style={{
+                borderRadius: 20,
+                height: 350,
+                width: 300,
+              }}
+              theme={{
+                backgroundColor: "#ffffff",
+                calendarBackground: "#ffffff",
+                textSectionTitleColor: "#b6c1cd",
+                selectedDayBackgroundColor: "#00adf5",
+                selectedDayTextColor: "#ffffff",
+                todayTextColor: "#00adf5",
+                dayTextColor: "#2d4150",
+                textDisabledColor: "#d9e1e8",
+              }}
+              onDayPress={(day) => {
+                setSelectedDate(day.dateString);
+                settimeStamp(day.timestamp);
+                setDisabled(false);
+                console.log(day);
+              }}
+              markedDates={{
+                [selectedDate]: {
+                  selected: true,
+                  disableTouchEvent: true,
+                  selectedColor: "black",
+                },
+              }}
+            />
+          </View>
+          <View className="w-full">
+            <CustomButtom
+              disabled={disabled}
+              title="Get Report"
+              handlePress={() => {
+                router.push(`/attendenceScreen/statistics/${timeStamp}`);
+              }}
+              textStyles="text-white"
+              containerStyles="m-6 items-center justify-center flex"
+            />
           </View>
         </View>
       </ScrollView>

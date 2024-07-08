@@ -146,12 +146,16 @@ export const getStudents = async () => {
   }
 };
 
-export const getAttendence = async (date: Date) => {
+export const getAttendence = async (date: string, lectureID: string[]) => {
   try {
     const attendence = await database.listDocuments(
       databaseID,
       attendenceCollection,
-      [Query.orderAsc("date"), Query.equal("date", date.toISOString())]
+      [
+        Query.orderAsc("only_date"),
+        Query.equal("only_date", date),
+        Query.equal("lecture", lectureID),
+      ]
     );
     if (!attendence) throw new Error("Error getting attendence");
     return attendence.documents;
@@ -460,7 +464,7 @@ export const markAttendence = async (
 };
 export const updateAttendence = async (absent_students: any[], id: any) => {
   try {
-    console.log("Update function called for id: ", id);
+    console.log("Update function called for id: ", id, " ", absent_students);
     const newAttendence = await database.updateDocument(
       databaseID,
       attendenceCollection,

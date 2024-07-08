@@ -75,7 +75,11 @@ const RootLayout = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="attendenceScreen/statistics/[classID]"
+            name="attendenceScreen/statistics/[selectedDate]"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="attendenceScreen/infoScreen/[classID]"
             options={{ headerShown: false }}
           />
         </Stack>

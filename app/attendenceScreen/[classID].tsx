@@ -72,7 +72,7 @@ const MarkAttendece = () => {
       return [{ absent_students: [] }];
     },
   });
-  console.log("Total data: ", data);
+
   const [submitting, setSubmitting] = useState(false);
   const onRefresh = async () => {
     await refetchData();
