@@ -67,6 +67,19 @@ export const createUser = async (
   }
 };
 
+export const editUser = (username: string, bio: string, id: any) => {
+  try {
+    const newItem = database.updateDocument(databaseID, userCollection, id, {
+      username,
+      bio,
+    });
+    if (!newItem) throw new Error("Error updating data");
+    return newItem;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const signIn = async (email: string, password: string) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);

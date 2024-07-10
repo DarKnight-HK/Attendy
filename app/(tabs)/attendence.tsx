@@ -33,6 +33,8 @@ const Attendence = () => {
                 borderRadius: 20,
                 height: 350,
                 width: 300,
+                borderWidth: 2,
+                borderColor: "#eee8e8",
               }}
               theme={{
                 backgroundColor: "#ffffff",

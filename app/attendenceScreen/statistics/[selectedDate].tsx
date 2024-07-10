@@ -107,7 +107,10 @@ const StatisticsScreen = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <CustomCard
-            movetoInfo={true}
+            moveto={{
+              pathname: "/attendenceScreen/infoScreen/[classID]",
+              params: { id: item.$id, currentDate: currentDate },
+            }}
             id={item.$id}
             title={item.name}
             time={item.time}
@@ -119,10 +122,10 @@ const StatisticsScreen = () => {
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            buttonText="Add Lectures"
-            title="No lectures added yet"
-            subtitle="Add lectures to mark attendance"
-            moveto="editScreen/addClasses"
+            buttonText="Go back"
+            title="Attendence not marked at this date"
+            subtitle="Refresh the page if you think this is wrong, swipe down to refresh"
+            moveto="/attendence"
           />
         )}
         refreshControl={

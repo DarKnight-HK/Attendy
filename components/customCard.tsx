@@ -12,13 +12,13 @@ const CustomCard = ({
   isFinished,
   isEditable,
   isHappening,
-  movetoInfo,
+  moveto,
 }: {
   id?: string;
   title: string;
   time: string;
   teacher: string;
-  movetoInfo?: boolean;
+  moveto?: any;
   isHappening?: boolean;
   isFinished: boolean;
   isEditable?: boolean;
@@ -27,8 +27,8 @@ const CustomCard = ({
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => {
-        if (isEditable) router.push(`editScreen/${id}`);
-        else if (movetoInfo) router.push(`attendenceScreen/infoScreen/${id}`);
+        if (moveto) router.push(moveto);
+        else if (isEditable) router.push(`editScreen/${id}`);
         else router.push(`attendenceScreen/${id}`);
       }}
       className=" flex-row ml-2 mr-2 mb-1 items-center rounded-xl drop-shadow-sm border-2 border-[#eee8e8] max-h-[60px] min-h-[60px] bg-[#FEFEFE] flex-1"
