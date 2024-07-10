@@ -63,7 +63,7 @@ const RootLayout = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="editScreen/settings/settings"
+            name="attendenceScreen/downloadReport/reportScreen"
             options={{ headerShown: false }}
           />
           <Stack.Screen

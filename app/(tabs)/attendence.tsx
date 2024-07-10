@@ -1,6 +1,5 @@
 import CustomButtom from "@/components/customButton";
-import { getLectures, getStudents } from "@/lib/appwrite";
-import { getCurrentDay } from "@/lib/utils";
+import { getAllLectures } from "@/lib/appwrite";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -10,7 +9,15 @@ const Attendence = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [timeStamp, settimeStamp] = useState(0);
   const [disabled, setDisabled] = useState(true);
-
+  const { data: allLectures, isLoading } = useQuery({
+    initialData: [],
+    queryKey: ["allLectures"],
+    queryFn: async () => {
+      const data = await getAllLectures();
+      if (!data) return [];
+      return data;
+    },
+  });
   return (
     <SafeAreaView className="h-full">
       <ScrollView>
@@ -64,9 +71,17 @@ const Attendence = () => {
           <View className="w-full">
             <CustomButtom
               disabled={disabled}
-              title="Get Report"
+              title="See Report"
               handlePress={() => {
                 router.push(`/attendenceScreen/statistics/${timeStamp}`);
+              }}
+              textStyles="text-white"
+              containerStyles="m-6 items-center justify-center flex"
+            />
+            <CustomButtom
+              title="Download Full Report"
+              handlePress={() => {
+                router.push("/attendenceScreen/downloadReport/reportScreen");
               }}
               textStyles="text-white"
               containerStyles="m-6 items-center justify-center flex"

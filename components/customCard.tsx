@@ -1,5 +1,4 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
 import ClockIcon from "./clockIcon";
 import { router } from "expo-router";
 import { cn, formatTime } from "@/lib/utils";
@@ -13,27 +12,32 @@ const CustomCard = ({
   isEditable,
   isHappening,
   moveto,
+  dayname,
+  onPress,
 }: {
   id?: string;
   title: string;
   time: string;
   teacher: string;
   moveto?: any;
+  dayname?: string;
   isHappening?: boolean;
-  isFinished: boolean;
+  isFinished?: boolean;
   isEditable?: boolean;
+  onPress?: any;
 }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => {
-        if (moveto) router.push(moveto);
+        if (onPress) onPress();
+        else if (moveto) router.push(moveto);
         else if (isEditable) router.push(`editScreen/${id}`);
         else router.push(`attendenceScreen/${id}`);
       }}
       className=" flex-row ml-2 mr-2 mb-1 items-center rounded-xl drop-shadow-sm border-2 border-[#eee8e8] max-h-[60px] min-h-[60px] bg-[#FEFEFE] flex-1"
     >
-      <ClockIcon isFinished={isFinished} />
+      <ClockIcon isFinished={isFinished || false} />
       <View className="flex-col ml-2">
         <Text
           className={cn(
@@ -61,7 +65,13 @@ const CustomCard = ({
             isFinished ? "text-green-400" : "text-zinc-400"
           )}
         >
-          {isFinished ? "Finished ✔️" : isHappening ? "Happening" : "Upcoming"}
+          {isFinished
+            ? "Finished ✔️"
+            : isHappening
+            ? "Happening"
+            : dayname
+            ? dayname
+            : "Upcoming"}
         </Text>
       </View>
     </TouchableOpacity>

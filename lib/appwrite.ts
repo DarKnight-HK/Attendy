@@ -119,10 +119,16 @@ export const signOut = async () => {
 
 export const getLectures = async (day: number) => {
   try {
+    const myClass = await getClass();
+    if (!myClass) throw new Error("Error getting class");
     const lectures = await database.listDocuments(
       databaseID,
       lecturesCollection,
-      [Query.orderDesc("$createdAt"), Query.equal("day", day)]
+      [
+        Query.orderDesc("$createdAt"),
+        Query.equal("day", day),
+        Query.equal("classes", myClass[0].$id),
+      ]
     );
     if (!lectures) throw new Error("Error getting lectures");
     return lectures.documents;
@@ -130,13 +136,29 @@ export const getLectures = async (day: number) => {
     console.log(error);
   }
 };
-
+export const getAllLectures = async () => {
+  try {
+    const myClass = await getClass();
+    if (!myClass) throw new Error("Error getting class");
+    const lectures = await database.listDocuments(
+      databaseID,
+      lecturesCollection,
+      [Query.orderAsc("day"), Query.equal("classes", myClass[0].$id)]
+    );
+    if (!lectures) throw new Error("Error getting lectures");
+    return lectures.documents;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getSpecificLecture = async (lectureID: any) => {
   try {
+    const myClass = await getClass();
+    if (!myClass) throw new Error("Error getting class");
     const lecture = await database.listDocuments(
       databaseID,
       lecturesCollection,
-      [Query.equal("$id", lectureID)]
+      [Query.equal("$id", lectureID), Query.equal("classes", myClass[0].$id)]
     );
     if (!lecture) throw new Error("Error getting lecture");
     return lecture.documents;
@@ -169,6 +191,19 @@ export const getAttendence = async (date: string, lectureID: string[]) => {
         Query.equal("only_date", date),
         Query.equal("lecture", lectureID),
       ]
+    );
+    if (!attendence) throw new Error("Error getting attendence");
+    return attendence.documents;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getFullAttendence = async (lectureID: any[]) => {
+  try {
+    const attendence = await database.listDocuments(
+      databaseID,
+      attendenceCollection,
+      [Query.orderAsc("only_date"), Query.equal("lecture", lectureID)]
     );
     if (!attendence) throw new Error("Error getting attendence");
     return attendence.documents;
