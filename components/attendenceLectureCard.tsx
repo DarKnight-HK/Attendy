@@ -62,7 +62,7 @@ const AttendenceLectureCard = ({
         onValueChange={() => {
           mutate();
         }}
-        color={isChecked ? "#4630EB" : undefined}
+        color={isChecked ? "#000000" : undefined}
       />
       <TouchableOpacity
         activeOpacity={0.7}

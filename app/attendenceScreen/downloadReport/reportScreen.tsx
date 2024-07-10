@@ -5,8 +5,9 @@ import {
   Dimensions,
   RefreshControl,
   Alert,
+  Platform,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllLectures, getFullAttendence } from "@/lib/appwrite";
 import { FlashList } from "@shopify/flash-list";
@@ -20,28 +21,55 @@ import * as Sharing from "expo-sharing";
 import { router } from "expo-router";
 
 const ReportScreen = () => {
+  const [loading, setloading] = useState(false);
   const saveCSVToDownloads = async (csvData: string) => {
     const fileName = "lecture_data.csv";
     const fileUri = FileSystem.documentDirectory + fileName;
 
     try {
+      setloading(true);
       await FileSystem.writeAsStringAsync(fileUri, csvData, {
         encoding: FileSystem.EncodingType.UTF8,
       });
-
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(fileUri, {
+      if (Platform.OS === "android") {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+        if (permissions.granted) {
+          const base64 = await FileSystem.readAsStringAsync(fileUri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          await FileSystem.StorageAccessFramework.createFileAsync(
+            permissions.directoryUri,
+            fileName,
+            "text/csv"
+          )
+            .then(async (uri) => {
+              await FileSystem.writeAsStringAsync(uri, base64, {
+                encoding: FileSystem.EncodingType.Base64,
+              });
+            })
+            .catch((e) => console.log(e));
+        } else {
+          Sharing.shareAsync(fileUri, {
+            mimeType: "text/csv",
+            dialogTitle: "Save CSV File",
+            UTI: "public.comma-separated-values-text",
+          });
+        }
+      } else {
+        Sharing.shareAsync(fileUri, {
           mimeType: "text/csv",
           dialogTitle: "Save CSV File",
           UTI: "public.comma-separated-values-text",
         });
-      } else {
-        console.log("Sharing is not available on this device");
       }
     } catch (error) {
       console.error("Error saving CSV file:", error);
+    } finally {
+      setloading(false);
     }
   };
+
   const {
     data: allLectures,
     isLoading,
@@ -74,21 +102,21 @@ const ReportScreen = () => {
       const transformedData = data.map((item: any) => ({
         Date: item.only_date,
         "Lecture Name": item.lecture.name,
-        "Marked at": new Date(item.lecture.time).toLocaleTimeString(),
-        "Lecture time": item.lecture.time,
+        "Marked at": new Date(item.marked_at).toLocaleTimeString(),
+        "Lecture time": new Date(item.lecture.time).toLocaleTimeString(),
         "Absent Students Names": item.absent_students
           .map((std: any) => std.name)
-          .join(","),
+          .join(", "),
         "Absent Students Roll No's": item.absent_students
           .map((std: any) => std.roll_no)
-          .join(","),
+          .join(", "),
       }));
       const csvData = jsonToCSV(transformedData);
       saveCSVToDownloads(csvData);
       reset();
-      Alert.alert("Success", "CSV file saved to Downloads folder");
-
-      router.replace("/attendence");
+      if (!loading) {
+        router.replace("/attendence");
+      }
     } catch (error: any) {
       Alert.alert("Error", error.message);
     }
@@ -104,7 +132,7 @@ const ReportScreen = () => {
           keyExtractor={(item) => item.$id}
           renderItem={({ item }) => (
             <AttendenceLectureCard
-              onPress={() => onPress(item.$id)}
+              onPress={() => {}}
               dayname={getCurrentDayName(item.day)}
               id={item.$id}
               title={item.name}
@@ -134,6 +162,7 @@ const ReportScreen = () => {
           )}
           ListFooterComponent={() => (
             <CustomButtom
+              isLoading={loading}
               title="Download data for selected lectures"
               textStyles="text-white"
               containerStyles="mx-3 my-4"
