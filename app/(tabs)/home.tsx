@@ -8,11 +8,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import React, { useState } from "react";
 import CustomCard from "@/components/customCard";
 import EmptyState from "@/components/emptyState";
-import { useGlobalStore } from "@/hooks/useGlobalStore";
-import { getLectures } from "@/lib/appwrite";
+
+import { getCurrentUser, getLectures } from "@/lib/appwrite";
 import { checkFinished, checkHappening, getCurrentDay } from "@/lib/utils";
 import { router } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +21,7 @@ const Home = () => {
     data: lectures,
     isLoading: dataLoading,
     refetch,
+    isRefetching,
   } = useQuery({
     initialData: [],
     queryKey: ["lectures"],
@@ -36,15 +36,20 @@ const Home = () => {
     },
   });
 
-  const { user, isLoading: userLoading } = useGlobalStore();
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
-
+  const { data: user, isLoading: userLoading } = useQuery({
+    initialData: null,
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const user = await getCurrentUser();
+        if (!user) return null;
+        return user;
+      } catch (error) {
+        console.log("Error in fetching user: ", error);
+        return null;
+      }
+    },
+  });
   return (
     <SafeAreaView className="h-full">
       <FlashList
@@ -125,7 +130,7 @@ const Home = () => {
           />
         )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
       />
     </SafeAreaView>

@@ -89,6 +89,7 @@ const StudentCard = ({
       );
     },
   });
+
   if (isLoading) {
     return (
       <View className="h-full items-center justify-center">

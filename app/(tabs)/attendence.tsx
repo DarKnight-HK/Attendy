@@ -49,8 +49,8 @@ const Attendence = () => {
                 textSectionTitleColor: "#b6c1cd",
                 selectedDayBackgroundColor: "#00adf5",
                 selectedDayTextColor: "#ffffff",
-                todayTextColor: "#00adf5",
-                dayTextColor: "#2d4150",
+                todayTextColor: "#000000",
+                dayTextColor: "#000000",
                 textDisabledColor: "#d9e1e8",
               }}
               onDayPress={(day) => {

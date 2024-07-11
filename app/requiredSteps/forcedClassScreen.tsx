@@ -10,10 +10,32 @@ import React, { useState } from "react";
 import FormField from "@/components/FormField";
 import { validateNumber } from "@/lib/validator";
 import CustomButtom from "@/components/customButton";
-import { createClass } from "@/lib/appwrite";
-import { router } from "expo-router";
+import { createClass, getClass } from "@/lib/appwrite";
+import { Redirect, router } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
 
 const ForcedClassScreen = () => {
+  const { data, isLoading } = useQuery({
+    initialData: [],
+    queryKey: ["CLASS"],
+    queryFn: async () => {
+      try {
+        const data = await getClass();
+        if (!data) return [];
+        return data;
+      } catch (error) {
+        console.log("Error in fetching class: ", error);
+        return [];
+      }
+    },
+  });
+  if (!isLoading) {
+    if (data) {
+      if (data.length > 0) {
+        return <Redirect href="/home" />;
+      }
+    }
+  }
   const [form, setForm] = useState({
     class_name: "",
     semester: "",

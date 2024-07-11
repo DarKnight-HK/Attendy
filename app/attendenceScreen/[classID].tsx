@@ -40,9 +40,21 @@ const MarkAttendece = () => {
   });
   const [marked, setMarked] = useState(false);
   const [docID, setDocID] = useState("");
-  const { data: classN, loading: classLoader } = useAppwrite(() =>
-    getSpecificLecture(classID)
-  );
+
+  const { data: classN, isLoading: classLoader } = useQuery({
+    initialData: [],
+    queryKey: ["specificLecture", classID],
+    queryFn: async () => {
+      try {
+        const data = await getSpecificLecture(classID);
+        if (!data) return [];
+        return data;
+      } catch (error) {
+        console.log("Error in fetching class: ", error);
+        return [];
+      }
+    },
+  });
   let allIDs: any[] = [];
   if (!studentLoader && students)
     allIDs = students.map((student) => student.$id);
@@ -90,6 +102,7 @@ const MarkAttendece = () => {
       await markAttendence(classID, data[0].absent_students, new Date());
     },
   });
+  console.log(data);
   const onSubmit = async () => {
     setSubmitting(true);
     try {

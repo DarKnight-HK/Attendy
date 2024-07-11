@@ -12,11 +12,7 @@ const InfoScreen = () => {
   const { currentDate, id } = useLocalSearchParams();
   const queryClient = useQueryClient();
   const data: any = queryClient.getQueryData(["attendence", currentDate]);
-  const {
-    data: students,
-    isLoading: studentLoader,
-    refetch,
-  } = useQuery({
+  const { data: students } = useQuery({
     initialData: [],
     queryKey: ["students"],
     queryFn: async () => {
@@ -34,12 +30,12 @@ const InfoScreen = () => {
     {
       value: (students?.length || 14) - data[0]?.absent_students.length,
 
-      color: "rgb(84,219,234)",
+      color: "#666666",
     },
 
     {
       value: data[0]?.absent_students.length,
-      color: "orange",
+      color: "#CCCCCC",
       focus: true,
     },
   ];
@@ -52,7 +48,7 @@ const InfoScreen = () => {
           style={{
             backgroundColor: color || "white",
           }}
-          className="rounded-full mr-[10] h-[18] w-[18]"
+          className="rounded-full border-black border-2 mr-[10] h-[18] w-[18]"
         />
 
         <Text className="text-black">{text || ""}</Text>
@@ -70,19 +66,17 @@ const InfoScreen = () => {
 
           <PieChart
             strokeColor="black"
-            strokeWidth={4}
+            strokeWidth={1}
             donut
             data={pieData}
             innerCircleColor="white"
-            innerCircleBorderWidth={4}
+            innerCircleBorderWidth={1}
             innerCircleBorderColor={"black"}
             showValuesAsLabels={true}
-            textBackgroundColor="black"
             textColor="white"
             showText
             radius={90}
             textSize={18}
-            showTextBackground={true}
             centerLabelComponent={() => {
               return (
                 <View className="items-center justify-center">
@@ -97,9 +91,9 @@ const InfoScreen = () => {
           />
 
           <View className="w-full flex-row justify-evenly mt-4">
-            {renderLegend("Present", "rgb(84,219,234)")}
+            {renderLegend("Present", "#666666")}
 
-            {renderLegend("Absent", "orange")}
+            {renderLegend("Absent", "#CCCCCC")}
           </View>
         </View>
         <FlashList

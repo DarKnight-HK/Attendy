@@ -49,7 +49,10 @@ export default function Index() {
             title="Continue"
             textStyles="text-white"
             containerStyles="w-full mt-7"
-            handlePress={() => router.push("/sign-in")}
+            handlePress={() => {
+              if (isLoggedIn) router.push("/home");
+              else router.push("/sign-in");
+            }}
           />
         </View>
       </ScrollView>

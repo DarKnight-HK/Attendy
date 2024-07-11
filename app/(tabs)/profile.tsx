@@ -21,19 +21,41 @@ import CustomButtom from "@/components/customButton";
 import { router } from "expo-router";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { changePfp, getCurrentUser, signOut } from "@/lib/appwrite";
+import { useQuery } from "@tanstack/react-query";
 
 const Profile = () => {
   const formSchema: { avatar: any } = { avatar: null };
   const [pfp, setPfp] = useState(formSchema);
   const { user, setIsLoggedIn, setUser } = useGlobalStore();
   const [loading, setLoading] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const logout = async () => {
-    await signOut();
-    setUser(null);
-    setIsLoggedIn(false);
-
-    router.replace("/sign-in");
+    try {
+      setLoggingOut(true);
+      await signOut();
+      setUser(null);
+      setIsLoggedIn(false);
+      router.replace("/");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setLoggingOut(false);
+    }
   };
+  const { data: profilePic, isLoading: userLoading } = useQuery({
+    initialData: null,
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const user = await getCurrentUser();
+        if (!user) return null;
+        return user;
+      } catch (error) {
+        console.log("Error in fetching user: ", error);
+        return null;
+      }
+    },
+  });
   useEffect(() => {}, [user]);
   const onSub = async () => {
     await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -89,7 +111,7 @@ const Profile = () => {
               disabled={loading}
             >
               <Image
-                source={{ uri: user?.avatar }}
+                source={{ uri: profilePic?.avatar }}
                 className="rounded-full w-[90%] h-[90%]"
                 resizeMode="cover"
               />
@@ -99,9 +121,9 @@ const Profile = () => {
             </TouchableOpacity>
           )}
           <View className="flex items-center justify-center gap-y-2">
-            <Text className="font-pbold text-2xl">{user?.username}</Text>
+            <Text className="font-pbold text-2xl">{profilePic?.username}</Text>
             <Text className="text-base text-black font-pregular">
-              {user?.bio === '""' ? "" : user?.bio}
+              {profilePic?.bio === '""' ? "" : profilePic?.bio}
             </Text>
           </View>
         </View>
@@ -132,6 +154,7 @@ const Profile = () => {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={logout}
+          disabled={loggingOut}
           className="flex-row items-center border-b-2 min-h-[60px] my-7 border-gray-200"
         >
           <View className="size-10 flex items-center justify-center ml-3 rounded-full bg-gray-200">
@@ -140,6 +163,13 @@ const Profile = () => {
           <Text className="text-xl ml-4 font-psemibold text-rose-500">
             Log out
           </Text>
+          {loggingOut && (
+            <ActivityIndicator
+              animating={loggingOut}
+              color={"#f43f5e"}
+              size="small"
+            />
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

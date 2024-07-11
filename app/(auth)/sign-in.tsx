@@ -5,7 +5,7 @@ import { getClass, signIn } from "@/lib/appwrite";
 
 import { validateEmail, validatePassword } from "@/lib/validator";
 import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -19,7 +19,7 @@ import {
 
 const SignIn = () => {
   const { setUser, setIsLoggedIn } = useGlobalStore();
-  const { data } = useQuery({
+  const { data, isLoading, status } = useQuery({
     initialData: [],
     queryKey: ["CLASS"],
     queryFn: async () => {
@@ -33,6 +33,11 @@ const SignIn = () => {
       }
     },
   });
+  if (!isLoading) {
+    if (data.length > 0) {
+      return <Redirect href="/home" />;
+    }
+  }
   const submit = async () => {
     try {
       setIsSubmitting(true);
@@ -45,7 +50,7 @@ const SignIn = () => {
         setUser(result);
         setIsLoggedIn(true);
 
-        if (data.length === 0)
+        if (data.length === 0 && status === "success")
           router.replace("/requiredSteps/forcedClassScreen");
         else {
           router.replace("/home");

@@ -35,6 +35,8 @@ const FormField = ({
       <Text className="text-base text-zinc-600 pl-2 font-pmedium">{title}</Text>
       <View className="w-full h-16 px-4 rounded-2xl border-2 border-zinc-200 focus:border-zinc-100 flex flex-row items-center">
         <TextInput
+          autoCapitalize="none"
+          autoCorrect={false}
           editable={editable}
           className="flex-1 text-base font-psemibold"
           value={value}

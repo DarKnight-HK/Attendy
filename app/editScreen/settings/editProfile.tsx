@@ -3,32 +3,57 @@ import React, { useState } from "react";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import FormField from "@/components/FormField";
 import CustomButtom from "@/components/customButton";
-import { editUser } from "@/lib/appwrite";
+import { editUser, getCurrentUser } from "@/lib/appwrite";
 import { router } from "expo-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const EditProfile = () => {
-  const { user, setUser } = useGlobalStore();
+  const { setUser, user: globaluser } = useGlobalStore();
+  const { data: user, isLoading: userLoading } = useQuery({
+    initialData: null,
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const user = await getCurrentUser();
+        if (!user) return null;
+        return user;
+      } catch (error) {
+        console.log("Error in fetching user: ", error);
+        return null;
+      }
+    },
+  });
   const [submitting, setSubmitting] = useState(false);
   const formSchema: { bio: string; username: string; email: string } = {
-    bio: user.bio,
-    username: user.username,
-    email: user.email,
+    bio: user?.bio,
+    username: user?.username,
+    email: user?.email,
   };
+  const queryClient = useQueryClient();
   const [form, setForm] = useState(formSchema);
-  const submit = async () => {
-    try {
-      setSubmitting(true);
-      if (!form.username || !form.bio)
-        throw new Error("Please fill all fields");
-      const response = await editUser(form.username, form.bio, user.$id);
-      if (!response) throw new Error("An error occured while updating profile");
-      setUser(response);
-      Alert.alert("Success", "Profile updated successfully");
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      try {
+        setSubmitting(true);
+        if (!form.username || !form.bio)
+          throw new Error("Please fill all fields");
+        const response = await editUser(form.username, form.bio, user?.$id);
+        if (!response)
+          throw new Error("An error occured while updating profile");
+        setUser(response);
+        Alert.alert("Success", "Profile updated successfully");
+      } catch (error: any) {
+        Alert.alert("Error", error.message);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    onSuccess: () => {
       router.replace("/profile");
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setSubmitting(false);
-    }
+      queryClient.setQueryData(["user"], globaluser);
+    },
+  });
+  const submit = async () => {
+    mutate();
   };
   return (
     <SafeAreaView className="h-full">

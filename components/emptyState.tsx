@@ -11,12 +11,14 @@ const EmptyState = ({
   buttonText,
   moveto,
   congrats,
+  onPress,
 }: {
   title: string;
   subtitle: string;
   buttonText: string;
-  moveto: string;
+  moveto?: string;
   congrats?: boolean;
+  onPress?: () => void;
 }) => {
   return (
     <View
@@ -35,7 +37,10 @@ const EmptyState = ({
 
       <CustomButton
         title={buttonText}
-        handlePress={() => router.push(moveto)}
+        handlePress={() => {
+          if (moveto) router.push(moveto);
+          else if (onPress) onPress();
+        }}
         containerStyles="w-full my-5"
         textStyles="text-white"
       />

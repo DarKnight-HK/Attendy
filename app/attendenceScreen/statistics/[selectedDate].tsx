@@ -122,10 +122,10 @@ const StatisticsScreen = () => {
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            buttonText="Go back"
+            buttonText="Refresh"
             title="Attendence not marked at this date"
             subtitle="Refresh the page if you think this is wrong, swipe down to refresh"
-            moveto="/attendence"
+            onPress={refetch}
           />
         )}
         refreshControl={
