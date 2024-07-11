@@ -27,7 +27,7 @@ const Attendence = () => {
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
-          <View className="mt-6 items-center">
+          <View className="mt-[64] items-center">
             <Text className="font-pbold text-2xl">Attendence Report</Text>
             <Text className="font-pregular text-base">
               Choose a date to check statistics
@@ -71,7 +71,7 @@ const Attendence = () => {
           <View className="w-full">
             <CustomButtom
               disabled={disabled}
-              title="See Report"
+              title={`See Report ${disabled ? " (Select a date first)" : ""}`}
               handlePress={() => {
                 router.push(`/attendenceScreen/statistics/${timeStamp}`);
               }}
@@ -84,7 +84,7 @@ const Attendence = () => {
                 router.push("/attendenceScreen/downloadReport/reportScreen");
               }}
               textStyles="text-white"
-              containerStyles="m-6 items-center justify-center flex"
+              containerStyles="mx-6 my-3 items-center justify-center flex"
             />
           </View>
         </View>
