@@ -5,7 +5,6 @@ import FormField from "@/components/FormField";
 import CustomButtom from "@/components/customButton";
 import { editUser } from "@/lib/appwrite";
 import { router } from "expo-router";
-
 const EditProfile = () => {
   const { user, setUser } = useGlobalStore();
   const [submitting, setSubmitting] = useState(false);
@@ -18,6 +17,8 @@ const EditProfile = () => {
   const submit = async () => {
     try {
       setSubmitting(true);
+      if (!form.username || !form.bio)
+        throw new Error("Please fill all fields");
       const response = await editUser(form.username, form.bio, user.$id);
       if (!response) throw new Error("An error occured while updating profile");
       setUser(response);

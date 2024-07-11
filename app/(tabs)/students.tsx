@@ -1,14 +1,12 @@
 import EmptyState from "@/components/emptyState";
 import FloatingButton from "@/components/floatingButton";
-import SearchBox from "@/components/searchBox";
 import SimpleStudentCard from "@/components/simpleStudentcard";
 import { getClass, getStudents } from "@/lib/appwrite";
-import useAppwrite from "@/lib/useAppwrite";
 import { cn } from "@/lib/utils";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react-native";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -57,6 +55,14 @@ const Students = () => {
   const handleSearch = (query: any) => {
     setSearch(query);
   };
+  const filteredStudents = useMemo(() => {
+    if (!students) return [];
+    return students.filter(
+      (student) =>
+        student.name.toLowerCase().includes(search.toLowerCase()) ||
+        student.roll_no.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [search, students]);
   return (
     <SafeAreaView className="h-full">
       <FloatingButton destination="editScreen/students/addStudents" />
@@ -97,7 +103,7 @@ const Students = () => {
                 placeholderTextColor="#828282"
                 autoCapitalize="none"
                 autoCorrect={false}
-                onChangeText={(query) => handleSearch(query)}
+                onChangeText={setSearch}
               />
               <TouchableOpacity onPress={() => {}}>
                 <Search color={"black"} />
@@ -117,7 +123,7 @@ const Students = () => {
       <FlashList
         keyboardShouldPersistTaps="always"
         estimatedItemSize={90}
-        data={students}
+        data={filteredStudents}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View className="gap-2">
