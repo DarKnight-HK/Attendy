@@ -21,7 +21,7 @@ import CustomButtom from "@/components/customButton";
 import { router } from "expo-router";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { changePfp, getCurrentUser, signOut } from "@/lib/appwrite";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Profile = () => {
   const formSchema: { avatar: any } = { avatar: null };
@@ -29,12 +29,14 @@ const Profile = () => {
   const { user, setIsLoggedIn, setUser } = useGlobalStore();
   const [loading, setLoading] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const queryClient = useQueryClient();
   const logout = async () => {
     try {
       setLoggingOut(true);
       await signOut();
       setUser(null);
       setIsLoggedIn(false);
+      queryClient.setQueryData(["user"], null);
       router.replace("/");
     } catch (error: any) {
       Alert.alert("Error", error.message);

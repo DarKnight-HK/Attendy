@@ -69,7 +69,7 @@ const Classes = () => {
               <Text className="font-pmedium text-sm">Your class is</Text>
               <Text className="text-2xl font-psemibold">{classN[0]?.name}</Text>
               <Text className="text-sm font-pmedium text-zinc-500">
-                {`${classN[0]?.semester}rd Semester`}
+                {`Semester: ${classN[0]?.semester}`}
               </Text>
             </View>
           )}
