@@ -71,6 +71,10 @@ const RootLayout = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name="editScreen/settings/classSettings"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name="attendenceScreen/[classID]"
             options={{ headerShown: false }}
           />

@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import {
   ArrowRightIcon,
   Camera,
+  ClipboardPen,
   LogOut,
   Settings,
   User,
@@ -140,14 +141,14 @@ const Profile = () => {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            router.push("/editScreen/settings/editProfile");
+            router.push("/editScreen/settings/classSettings");
           }}
           className="flex-row items-center border-b-2 min-h-[60px] my-7 border-gray-200"
         >
           <View className="size-10 flex items-center justify-center ml-3 rounded-full bg-gray-200">
-            <User color={"black"} />
+            <ClipboardPen color={"black"} />
           </View>
-          <Text className="text-xl ml-4 font-psemibold">My Profile</Text>
+          <Text className="text-xl ml-4 font-psemibold">My Class</Text>
           <View className="ml-auto mr-4">
             <ArrowRightIcon color={"black"} />
           </View>
