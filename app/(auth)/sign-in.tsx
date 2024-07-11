@@ -2,8 +2,9 @@ import FormField from "@/components/FormField";
 import CustomButtom from "@/components/customButton";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { getClass, signIn } from "@/lib/appwrite";
-import useAppwrite from "@/lib/useAppwrite";
+
 import { validateEmail, validatePassword } from "@/lib/validator";
+import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -18,7 +19,20 @@ import {
 
 const SignIn = () => {
   const { setUser, setIsLoggedIn } = useGlobalStore();
-  const { data } = useAppwrite(getClass);
+  const { data } = useQuery({
+    initialData: [],
+    queryKey: ["CLASS"],
+    queryFn: async () => {
+      try {
+        const data = await getClass();
+        if (!data) return [];
+        return data;
+      } catch (error) {
+        console.log("Error in fetching class: ", error);
+        return [];
+      }
+    },
+  });
   const submit = async () => {
     try {
       setIsSubmitting(true);

@@ -12,7 +12,6 @@ import React, { useState } from "react";
 import CustomCard from "@/components/customCard";
 import EmptyState from "@/components/emptyState";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
-import useAppwrite from "@/lib/useAppwrite";
 import { getLectures } from "@/lib/appwrite";
 import { checkFinished, checkHappening, getCurrentDay } from "@/lib/utils";
 import { router } from "expo-router";

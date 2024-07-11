@@ -2,7 +2,7 @@ import FormField from "@/components/FormField";
 import CustomButtom from "@/components/customButton";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { createUser, getClass } from "@/lib/appwrite";
-import useAppwrite from "@/lib/useAppwrite";
+
 import {
   validateEmail,
   validatePassword,

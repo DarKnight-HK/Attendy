@@ -17,9 +17,27 @@ import { router } from "expo-router";
 import useAppwrite from "@/lib/useAppwrite";
 import { createStudent, getClass } from "@/lib/appwrite";
 import { Upload } from "lucide-react-native";
+import { useQuery } from "@tanstack/react-query";
 
 const AddStudents = () => {
-  const { data, loading } = useAppwrite(getClass);
+  const {
+    data,
+    isLoading: loading,
+    refetch: classDateRefetch,
+  } = useQuery({
+    initialData: [],
+    queryKey: ["CLASS"],
+    queryFn: async () => {
+      try {
+        const data = await getClass();
+        if (!data) return [];
+        return data;
+      } catch (error) {
+        console.log("Error in fetching class: ", error);
+        return [];
+      }
+    },
+  });
   const [uploading, setUploading] = useState(false);
   const formSchema: { name: string; roll_no: string; avatar: any } = {
     name: "",

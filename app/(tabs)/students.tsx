@@ -4,22 +4,28 @@ import SearchBox from "@/components/searchBox";
 import SimpleStudentCard from "@/components/simpleStudentcard";
 import { getClass, getStudents } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
+import { cn } from "@/lib/utils";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { Search } from "lucide-react-native";
+import { useState } from "react";
 import {
   View,
   Text,
   SafeAreaView,
   RefreshControl,
   ActivityIndicator,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
 
 const Students = () => {
+  const [search, setSearch] = useState("");
   const {
     data: students,
     isLoading: studentLoader,
     refetch,
+    isRefetching,
   } = useQuery({
     initialData: [],
     queryKey: ["students"],
@@ -33,22 +39,81 @@ const Students = () => {
       }
     },
   });
-  const { data: classN, loading: classLoader } = useAppwrite(getClass);
+  const { data: classN, isLoading: classLoader } = useQuery({
+    initialData: [],
+    queryKey: ["CLASS"],
+    queryFn: async () => {
+      try {
+        const data = await getClass();
+        if (!data) return [];
+        return data;
+      } catch (error) {
+        console.log("Error in fetching class: ", error);
+        return [];
+      }
+    },
+  });
 
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
+  const handleSearch = (query: any) => {
+    setSearch(query);
   };
-
-  const [search, setSearch] = useState("");
-  useEffect(() => {}, [search]);
   return (
     <SafeAreaView className="h-full">
       <FloatingButton destination="editScreen/students/addStudents" />
-
+      <>
+        <View className="flex mt-[60px] px-4 space-y-6">
+          <View className="mb-6">
+            <View>
+              <Text className="font-pmedium text-sm">Your class is</Text>
+              {classLoader && (
+                <ActivityIndicator
+                  animating={classLoader}
+                  color="#000000"
+                  size="small"
+                  className="ml-2"
+                />
+              )}
+              {!classLoader && (
+                <Text className="text-2xl font-psemibold">
+                  {classN[0]?.name}
+                </Text>
+              )}
+            </View>
+            <View className="flex items-center mt-3 justify-center">
+              <Text className="text-2xl font-pbold">Students</Text>
+              <Text className="font-psemibold text-sm">
+                Tap on a student to modify
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View className="my-3 mx-4">
+          <View className={cn("space-y-2 bg-white rounded-xl")}>
+            <View className="w-full h-16 px-4 rounded-2xl border-2 border-zinc-200 focus:border-zinc-100 flex flex-row items-center">
+              <TextInput
+                className="flex-1 text-base font-psemibold"
+                value={search}
+                placeholder={"Enter the name or roll number"}
+                placeholderTextColor="#828282"
+                autoCapitalize="none"
+                autoCorrect={false}
+                onChangeText={(query) => handleSearch(query)}
+              />
+              <TouchableOpacity onPress={() => {}}>
+                <Search color={"black"} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {studentLoader && (
+            <ActivityIndicator
+              animating={studentLoader}
+              color="#000000"
+              size="large"
+              className="ml-2"
+            />
+          )}
+        </View>
+      </>
       <FlashList
         keyboardShouldPersistTaps="always"
         estimatedItemSize={90}
@@ -64,52 +129,8 @@ const Students = () => {
             />
           </View>
         )}
-        ListHeaderComponent={() => (
-          <>
-            <View className="flex mt-[60px] px-4 space-y-6">
-              <View className="mb-6">
-                <View>
-                  <Text className="font-pmedium text-sm">Your class is</Text>
-                  {classLoader && (
-                    <ActivityIndicator
-                      animating={classLoader}
-                      color="#000000"
-                      size="small"
-                      className="ml-2"
-                    />
-                  )}
-                  {!classLoader && (
-                    <Text className="text-2xl font-psemibold">
-                      {classN[0]?.name}
-                    </Text>
-                  )}
-                </View>
-                <View className="flex items-center mt-3 justify-center">
-                  <Text className="text-2xl font-pbold">Students</Text>
-                  <Text className="font-psemibold text-sm">
-                    Tap on a student to modify
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View className="my-3 mx-4">
-              <SearchBox
-                placeholder="Enter the student name or roll number"
-                otherStyles="bg-white rounded-xl"
-              />
-              {studentLoader && (
-                <ActivityIndicator
-                  animating={studentLoader}
-                  color="#000000"
-                  size="large"
-                  className="ml-2"
-                />
-              )}
-            </View>
-          </>
-        )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
         ListEmptyComponent={() => (
           <EmptyState

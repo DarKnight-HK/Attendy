@@ -7,6 +7,7 @@ import { getClass, getLectures } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import { checkFinished, checkHappening } from "@/lib/utils";
 import { FlashList } from "@shopify/flash-list";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -21,11 +22,25 @@ const Classes = () => {
   const { data: lectures, refetch } = useAppwrite(() =>
     getLectures(currentDay)
   );
+
   const {
     data: classN,
+    isLoading: loading,
     refetch: classDateRefetch,
-    loading,
-  } = useAppwrite(getClass);
+  } = useQuery({
+    initialData: [],
+    queryKey: ["CLASS"],
+    queryFn: async () => {
+      try {
+        const data = await getClass();
+        if (!data) return [];
+        return data;
+      } catch (error) {
+        console.log("Error in fetching class: ", error);
+        return [];
+      }
+    },
+  });
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     refetch();

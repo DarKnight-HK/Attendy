@@ -6,6 +6,7 @@ type Props = {
   placeholder?: string;
   otherStyles?: string;
   initialQuery?: string;
+  onValueChange?: (value: string) => void;
 };
 
 const SearchBox = ({ placeholder, otherStyles, initialQuery }: Props) => {

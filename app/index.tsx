@@ -1,14 +1,27 @@
 import CustomButtom from "@/components/customButton";
 import { useGlobalStore } from "@/hooks/useGlobalStore";
 import { getClass } from "@/lib/appwrite";
-import useAppwrite from "@/lib/useAppwrite";
+import { useQuery } from "@tanstack/react-query";
 import { Redirect, router } from "expo-router";
 import { GraduationCap } from "lucide-react-native";
 import { Dimensions, SafeAreaView, ScrollView, Text, View } from "react-native";
 
 export default function Index() {
   const { isLoading, isLoggedIn } = useGlobalStore();
-  const { data } = useAppwrite(getClass);
+  const { data } = useQuery({
+    initialData: [],
+    queryKey: ["CLASS"],
+    queryFn: async () => {
+      try {
+        const data = await getClass();
+        if (!data) return [];
+        return data;
+      } catch (error) {
+        console.log("Error in fetching class: ", error);
+        return [];
+      }
+    },
+  });
   if (!isLoading && isLoggedIn) {
     if (data) {
       if (data.length > 0) {
