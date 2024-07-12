@@ -9,7 +9,7 @@ import {
   STORAGE_ID,
   STUDENTS_COLLECTION_ID,
   USERS_COLLECTION_ID,
-} from "@/env";
+} from "@env";
 import {
   Client,
   Account,
