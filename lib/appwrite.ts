@@ -104,7 +104,9 @@ export const getCurrentUser = async () => {
     );
     if (!currentUser) throw new Error("Error getting current user");
     return currentUser.documents[0];
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const signOut = async () => {
@@ -238,6 +240,23 @@ export const createClass = async (name: string, semester: string) => {
       classCollection,
       ID.unique(),
       { name, semester: intsem, cr: currentUser.$id }
+    );
+    if (!newClass) throw new Error("Error creating class");
+    return newClass;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const updateClass = async (name: string, semester: string) => {
+  const intsem = parseInt(semester);
+  try {
+    const currentClass = await getClass();
+    if (!currentClass) throw new Error("Error getting current class");
+    const newClass = await database.updateDocument(
+      databaseID,
+      classCollection,
+      currentClass[0].$id,
+      { name, semester: intsem }
     );
     if (!newClass) throw new Error("Error creating class");
     return newClass;

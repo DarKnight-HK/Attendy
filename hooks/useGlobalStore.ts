@@ -1,4 +1,4 @@
-import { getCurrentUser, getStudents } from "@/lib/appwrite";
+import { getCurrentUser } from "@/lib/appwrite";
 import { getCurrentDay } from "@/lib/utils";
 import { create } from "zustand";
 

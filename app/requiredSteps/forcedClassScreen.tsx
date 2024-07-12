@@ -15,6 +15,10 @@ import { Redirect, router } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 
 const ForcedClassScreen = () => {
+  const [form, setForm] = useState({
+    class_name: "",
+    semester: "",
+  });
   const { data, isLoading } = useQuery({
     initialData: [],
     queryKey: ["CLASS"],
@@ -36,10 +40,7 @@ const ForcedClassScreen = () => {
       }
     }
   }
-  const [form, setForm] = useState({
-    class_name: "",
-    semester: "",
-  });
+
   const onSubmit = async (data: any) => {
     try {
       const result = await createClass(data.class_name, data.semester);

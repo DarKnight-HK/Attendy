@@ -10,12 +10,13 @@ import React, { useEffect, useState } from "react";
 import FormField from "@/components/FormField";
 import { validateNumber } from "@/lib/validator";
 import CustomButtom from "@/components/customButton";
-import { createClass, getClass } from "@/lib/appwrite";
+import { getClass, updateClass } from "@/lib/appwrite";
 import { Redirect, router } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 
 const ClassSettings = () => {
-  const { data, isLoading } = useQuery({
+  const [submitting, setSubmitting] = useState(false);
+  const { data } = useQuery({
     initialData: [],
     queryKey: ["CLASS"],
     queryFn: async () => {
@@ -29,13 +30,7 @@ const ClassSettings = () => {
       }
     },
   });
-  if (!isLoading) {
-    if (data) {
-      if (data.length > 0) {
-        return <Redirect href="/home" />;
-      }
-    }
-  }
+
   const formSchema: { class_name: string; semester: string } = {
     class_name: "",
     semester: "",
@@ -45,20 +40,23 @@ const ClassSettings = () => {
     if (data.length > 0) {
       setForm({
         class_name: data[0]?.name || "",
-        semester: data[0]?.semester || "",
+        semester: data[0]?.semester.toString() || "",
       });
     }
   }, [data]);
   const onSubmit = async (data: any) => {
     try {
-      const result = await createClass(data.class_name, data.semester);
+      setSubmitting(true);
+      const result = await updateClass(data.class_name, data.semester);
       if (!result) {
-        throw new Error("Error creating class");
+        throw new Error("Error updating class");
       }
-      Alert.alert("Success", "Class created successfully");
+      Alert.alert("Success", "Class updated successfully");
       router.replace("/home");
     } catch (error: any) {
       Alert.alert("Error", error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -74,7 +72,7 @@ const ClassSettings = () => {
           <View className="items-center">
             <Text className="font-pextrabold text-3xl">Welcome to Attendy</Text>
             <Text className="font-regular text-base">
-              Create a class to get started
+              Update your class details
             </Text>
           </View>
           <View className="mt-[100px]">
@@ -99,10 +97,11 @@ const ClassSettings = () => {
               />
             </View>
             <CustomButtom
-              title="Create a class"
+              title="Update class details"
               handlePress={() => onSubmit(form)}
               textStyles="text-white"
               containerStyles="m-5"
+              isLoading={submitting}
             />
           </View>
         </View>

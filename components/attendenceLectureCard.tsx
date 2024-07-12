@@ -1,20 +1,15 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import ClockIcon from "./clockIcon";
-import { router } from "expo-router";
 import { cn, formatTime } from "@/lib/utils";
 import Checkbox from "expo-checkbox";
-import { useGlobalStore } from "@/hooks/useGlobalStore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const AttendenceLectureCard = ({
   id,
   title,
   time,
   teacher,
   isFinished,
-  isEditable,
-  isHappening,
-  moveto,
   dayname,
   onPress,
 }: {

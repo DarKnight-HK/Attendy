@@ -15,9 +15,20 @@
       },
       "package": "com.hex.attendy"
     },
-    "plugins": ["expo-router", "expo-font"],
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "574f15c8-d7ba-4f12-880d-02fb52b8cc6f"
+      }
     }
   }
 }

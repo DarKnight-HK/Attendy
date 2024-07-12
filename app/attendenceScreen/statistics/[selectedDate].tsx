@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { getAttendence, getLectures, getSpecificLecture } from "@/lib/appwrite";
+import { getAttendence, getLectures } from "@/lib/appwrite";
 import { useQuery } from "@tanstack/react-query";
 import { FlashList } from "@shopify/flash-list";
 import EmptyState from "@/components/emptyState";
@@ -69,7 +69,7 @@ const StatisticsScreen = () => {
       }
     },
   });
-
+  console.log(currentDay);
   return (
     <SafeAreaView className="h-full">
       <View className="flex mt-[60px] px-4 space-y-6">

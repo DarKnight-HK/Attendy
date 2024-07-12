@@ -18,6 +18,11 @@ import {
 } from "react-native";
 
 const SignIn = () => {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [submitting, setIsSubmitting] = useState(false);
   const { setUser, setIsLoggedIn } = useGlobalStore();
   const { data, isLoading, status } = useQuery({
     initialData: [],
@@ -63,11 +68,7 @@ const SignIn = () => {
       setIsSubmitting(false);
     }
   };
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-  const [submitting, setIsSubmitting] = useState(false);
+
   return (
     <SafeAreaView className="h-full">
       <ScrollView>
