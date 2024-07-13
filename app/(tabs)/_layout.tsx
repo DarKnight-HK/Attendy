@@ -29,7 +29,7 @@ const TabsLayout = () => {
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
             <View className="gap-2 flex items-center justify-center">
-              <Home size={24} color={focused ? "black" : "gray"} />
+              <Home size={20} color={focused ? "black" : "gray"} />
               <Text
                 className={`${
                   focused ? "font-psemibold" : "font-pregular"
@@ -49,7 +49,7 @@ const TabsLayout = () => {
           title: "Classes",
           tabBarIcon: ({ focused, color }) => (
             <View className="gap-2 flex items-center justify-center">
-              <School size={24} color={focused ? "black" : "gray"} />
+              <School size={20} color={focused ? "black" : "gray"} />
               <Text
                 className={`${
                   focused ? "font-psemibold" : "font-pregular"
@@ -69,7 +69,7 @@ const TabsLayout = () => {
           title: "Attendence",
           tabBarIcon: ({ focused, color }) => (
             <View className="gap-2 flex items-center justify-center">
-              <ClipboardPenLine size={24} color={focused ? "black" : "gray"} />
+              <ClipboardPenLine size={20} color={focused ? "black" : "gray"} />
               <Text
                 className={`${
                   focused ? "font-psemibold" : "font-pregular"
@@ -89,7 +89,7 @@ const TabsLayout = () => {
           title: "Students",
           tabBarIcon: ({ focused, color }) => (
             <View className="gap-2 flex items-center justify-center">
-              <GraduationCap size={24} color={focused ? "black" : "gray"} />
+              <GraduationCap size={20} color={focused ? "black" : "gray"} />
               <Text
                 className={`${
                   focused ? "font-psemibold" : "font-pregular"
@@ -109,7 +109,7 @@ const TabsLayout = () => {
           title: "Profile",
           tabBarIcon: ({ focused, color }) => (
             <View className="gap-2 flex items-center justify-center">
-              <CircleUserRound size={24} color={focused ? "black" : "gray"} />
+              <CircleUserRound size={20} color={focused ? "black" : "gray"} />
               <Text
                 className={`${
                   focused ? "font-psemibold" : "font-pregular"

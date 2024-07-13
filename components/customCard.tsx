@@ -60,7 +60,10 @@ const CustomCard = ({
             isFinished ? "text-green-500" : ""
           )}
         >
-          {formatTime(time)}
+          {new Date(time).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </Text>
 
         <Text

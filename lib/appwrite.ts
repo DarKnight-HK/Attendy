@@ -159,10 +159,12 @@ export const getSpecificLecture = async (lectureID: any) => {
 
 export const getStudents = async () => {
   try {
+    const currentClass = await getClass();
+    if (!currentClass) throw new Error("Error getting class");
     const students = await database.listDocuments(
       databaseID,
       studentsCollection,
-      [Query.orderAsc("roll_no")]
+      [Query.orderAsc("roll_no"), Query.equal("class", currentClass[0].$id)]
     );
     if (!students) throw new Error("Error getting students");
     return students.documents;
