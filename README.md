@@ -1,5 +1,3 @@
-Here is the beautifully formatted `README.md` file for your project:
-
 # 📚 Attendy
 
 An Attendance Manager for universities, especially for NTU.
