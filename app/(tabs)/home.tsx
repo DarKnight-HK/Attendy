@@ -107,7 +107,7 @@ const Home = () => {
               <View className="flex items-center mt-3 justify-center">
                 <Text className="text-2xl font-pbold">Your lectures</Text>
                 <Text className="font-psemibold text-sm">
-                  Tap on a lecture to mark attendece
+                  Tap on a lecture to mark attendence
                 </Text>
               </View>
             </View>
