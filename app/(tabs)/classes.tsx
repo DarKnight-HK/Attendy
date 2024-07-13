@@ -23,11 +23,7 @@ const Classes = () => {
     getLectures(currentDay)
   );
 
-  const {
-    data: classN,
-    isLoading: loading,
-    refetch: classDateRefetch,
-  } = useQuery({
+  const { data: classN, isLoading: loading } = useQuery({
     initialData: [],
     queryKey: ["CLASS"],
     queryFn: async () => {

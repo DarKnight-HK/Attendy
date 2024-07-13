@@ -78,7 +78,6 @@ const SignIn = () => {
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
-          <Text className="mb-24 font-pextrabold text-3xl">HEX</Text>
           <Text className="font-pbold text-2xl">Login to your account</Text>
           <Text className="font-pregular text-md mt-3">
             Enter your credentials to sign in to this app

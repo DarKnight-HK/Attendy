@@ -13,7 +13,6 @@ import StudentCard from "@/components/studentCard";
 import EmptyState from "@/components/emptyState";
 import {
   checkMarked,
-  getSpecificLecture,
   getStudents,
   markAttendence,
   updateAttendence,
@@ -22,8 +21,8 @@ import CustomButtom from "@/components/customButton";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const MarkAttendece = () => {
-  const { id, time } = useLocalSearchParams();
-  console.log(id, time);
+  const { id, time, title } = useLocalSearchParams();
+
   const [changing, setChanging] = useState(false);
   const { data: students, isLoading: studentLoader } = useQuery({
     initialData: [],
@@ -41,20 +40,6 @@ const MarkAttendece = () => {
   const [marked, setMarked] = useState(false);
   const [docID, setDocID] = useState("");
 
-  const { data: classN, isLoading: classLoader } = useQuery({
-    initialData: [],
-    queryKey: ["specificLecture", id],
-    queryFn: async () => {
-      try {
-        const data = await getSpecificLecture(id);
-        if (!data) return [];
-        return data;
-      } catch (error) {
-        console.log("Error in fetching class: ", error);
-        return [];
-      }
-    },
-  });
   let allIDs: any[] = [];
   if (!studentLoader && students)
     allIDs = students.map((student) => student.$id);
@@ -159,7 +144,7 @@ const MarkAttendece = () => {
               <StudentCard
                 setChanging={setChanging}
                 classID={id}
-                time={classN[0]?.time}
+                time={time}
                 id={item.$id}
                 managing={true}
                 rollNo={item.roll_no}
@@ -177,24 +162,13 @@ const MarkAttendece = () => {
                     <Text className="font-pmedium text-sm">
                       {marked ? `Updating` : `Marking`} attendence for
                     </Text>
-                    {classLoader && (
-                      <ActivityIndicator
-                        animating={classLoader}
-                        color="#000000"
-                        size="small"
-                        className="ml-2"
-                      />
-                    )}
-                    {!classLoader && (
-                      <View className="gap-x-4">
-                        <Text className="text-2xl font-psemibold">
-                          {classN[0]?.name}
-                        </Text>
-                        <Text className="text-xs font-zinc-500">
-                          {lectureTime}
-                        </Text>
-                      </View>
-                    )}
+
+                    <View className="gap-x-4">
+                      <Text className="text-2xl font-psemibold">{title}</Text>
+                      <Text className="text-xs font-zinc-500">
+                        {lectureTime}
+                      </Text>
+                    </View>
                   </View>
                   <View className="flex items-center mt-3 justify-center">
                     <Text className="text-2xl font-pbold">

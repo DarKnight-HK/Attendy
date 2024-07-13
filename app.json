@@ -3,6 +3,7 @@
     "name": "Attendy",
     "slug": "Attendy",
     "version": "1.0.0",
+    "icon": "./assets/images/icon.png",
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -13,12 +14,10 @@
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
+
       "package": "com.hex.attendy"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ],
+    "plugins": ["expo-router", "expo-font"],
     "experiments": {
       "typedRoutes": true
     },

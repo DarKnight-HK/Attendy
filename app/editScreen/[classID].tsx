@@ -22,15 +22,13 @@ import { Trash } from "lucide-react-native";
 
 const ManageClasses = () => {
   const { classID } = useLocalSearchParams();
-  const { data, loading } = useAppwrite(() => getSpecificLecture(classID));
+  const { data } = useAppwrite(() => getSpecificLecture(classID));
 
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const toggleDatePicker = () => setShowPicker(!showPicker);
-
-  const { currentDay } = useGlobalStore();
 
   const formSchema: {
     name: string;
