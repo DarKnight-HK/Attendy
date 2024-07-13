@@ -1,91 +1,92 @@
-# Attendy
+Here is the beautifully formatted `README.md` file for your project:
 
-An Attendence Manager for universities especially for NTU
+# 📚 Attendy
 
-## Get started
+An Attendance Manager for universities, especially for NTU.
 
-1. Install dependencies
+## 🚀 Get Started
+
+1. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. **Start the app**
 
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-## Features
+## 🌟 Features
 
-1. User Authentication
-2. User-friendly UI
-3. All attendence is saved online
-4. Ability to add/manage lectures
-5. Ability to add/manage students
-6. Export attendence in CSV file
+1. 🔒 User Authentication
+2. 🖥️ User-friendly UI
+3. ☁️ All attendance is saved online
+4. 📝 Ability to add/manage lectures
+5. 👩‍🎓👨‍🎓 Ability to add/manage students
+6. 📊 Export attendance in CSV file
 
-## Technologies used
+## 🛠️ Technologies Used
 
 1. React Native
 2. Appwrite
-3. Typescript
+3. TypeScript
 4. Expo
 5. TailwindCSS (NativeWind)
 6. Tanstack Query
 7. Zod
 8. Zustand
-9. Many more... (read package.json)
+9. Many more... (read `package.json`)
 
-## Setting up this project locally
+## 🏗️ Setting Up This Project Locally
 
-#### Clone the Repo
+### 📂 Clone the Repo
 
-#### Create and account on Appwrite
+### 🌐 Create an Account on Appwrite
 
-#### Create a database
+### 🗄️ Create a Database
 
-#### Add these collections with all CRUD permissions
+### 📝 Add These Collections with All CRUD Permissions
 
-         - users (
-           username:string
-           email:Email
-           avatar:URL
-           accountID:string
-           bio?:string
-           )
+- **users**
 
-         - classes (
-            name:string
-            semester:integer
-            cr: 1-1 realtion with users
-            )
+  - `username`: string
+  - `email`: Email
+  - `avatar`: URL
+  - `accountID`: string
+  - `bio?`: string
 
-         - students (
-            name:string
-            roll_no:string
-            avatar:URL
-            class: N-1 realtion with classes
-            )
+- **classes**
 
-         - lectures (
-            name: string
-            teacher: string
-            time: Datetime
-            duration: integer
-            day: integer
-            credit_hours: integer
-            classes: N-1 relation with classes
-            )
+  - `name`: string
+  - `semester`: integer
+  - `cr`: 1-1 relation with users
 
-         - attendence (
-            marked_at: Datetime
-            only_date: string
-            absent_students: N-N relation with users
-            lecture: N-1 realtion with lectures
-            )
+- **students**
 
-#### Add these enviornment variables to your .env file
+  - `name`: string
+  - `roll_no`: string
+  - `avatar`: URL
+  - `class`: N-1 relation with classes
+
+- **lectures**
+
+  - `name`: string
+  - `teacher`: string
+  - `time`: Datetime
+  - `duration`: integer
+  - `day`: integer
+  - `credit_hours`: integer
+  - `classes`: N-1 relation with classes
+
+- **attendance**
+  - `marked_at`: Datetime
+  - `only_date`: string
+  - `absent_students`: N-N relation with users
+  - `lecture`: N-1 relation with lectures
+
+### 🔐 Add These Environment Variables to Your `.env` File
 
 ```
 EXPO_PUBLIC_PROJECT_ID=
@@ -100,13 +101,13 @@ EXPO_PUBLIC_CLASSES_COLLECTION_ID=
 EXPO_PUBLIC_STORAGE_ID=
 ```
 
-## Screenshots
+## 📸 Screenshots
 
 <p>
-<img src="screenshots/1.jpeg" height=500 width=auto>
-<img src="screenshots/12.jpeg" height=500 width=auto>
-<img src="screenshots/4.jpeg" height=500 width=auto>
-<img src="screenshots/6.jpeg" height=500 width=auto>
-<img src="screenshots/5.jpeg" height=500 width=auto>
-<img src="screenshots/8.jpeg" height=500 width=auto>
+<img src="screenshots/1.jpeg" height="500" width="auto">
+<img src="screenshots/12.jpeg" height="500" width="auto">
+<img src="screenshots/4.jpeg" height="500" width="auto">
+<img src="screenshots/6.jpeg" height="500" width="auto">
+<img src="screenshots/5.jpeg" height="500" width="auto">
+<img src="screenshots/8.jpeg" height="500" width="auto">
 </p>
