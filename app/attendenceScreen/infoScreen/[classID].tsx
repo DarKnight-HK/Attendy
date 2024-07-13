@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView, Dimensions } from "react-native";
+import { View, Text, SafeAreaView, Dimensions } from "react-native";
 import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import { PieChart } from "react-native-gifted-charts";
@@ -9,7 +9,7 @@ import SimpleStudentCard from "@/components/simpleStudentcard";
 import EmptyState from "@/components/emptyState";
 
 const InfoScreen = () => {
-  const { currentDate, id } = useLocalSearchParams();
+  const { currentDate } = useLocalSearchParams();
   const queryClient = useQueryClient();
   const data: any = queryClient.getQueryData(["attendence", currentDate]);
   const { data: students } = useQuery({

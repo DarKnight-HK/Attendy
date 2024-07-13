@@ -33,7 +33,11 @@ const CustomCard = ({
         if (onPress) onPress();
         else if (moveto) router.push(moveto);
         else if (isEditable) router.push(`editScreen/${id}`);
-        else router.push(`attendenceScreen/${id}`);
+        else
+          router.push({
+            pathname: "attendenceScreen/[classID]",
+            params: { id: id, time: time },
+          });
       }}
       className=" flex-row ml-2 mr-2 mb-1 items-center rounded-xl drop-shadow-sm border-2 border-[#eee8e8] max-h-[60px] min-h-[60px] bg-[#FEFEFE] flex-1"
     >

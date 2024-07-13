@@ -1,16 +1,4 @@
 import {
-  ATTENDANCE_COLLECTION_ID,
-  CLASSES_COLLECTION_ID,
-  DATABASE_ID,
-  ENDPOINT,
-  LECTURES_COLLECTION_ID,
-  PLATFORM,
-  PROJECT_ID,
-  STORAGE_ID,
-  STUDENTS_COLLECTION_ID,
-  USERS_COLLECTION_ID,
-} from "@env";
-import {
   Client,
   Account,
   ID,
@@ -22,16 +10,16 @@ import {
 } from "react-native-appwrite";
 const client = new Client();
 
-const endpoint = ENDPOINT;
-const project = PROJECT_ID;
-const platform = PLATFORM;
-const databaseID = DATABASE_ID;
-const userCollection = USERS_COLLECTION_ID;
-const studentsCollection = STUDENTS_COLLECTION_ID;
-const attendenceCollection = ATTENDANCE_COLLECTION_ID;
-const lecturesCollection = LECTURES_COLLECTION_ID;
-const classCollection = CLASSES_COLLECTION_ID;
-const storageID = STORAGE_ID;
+const endpoint = process.env.EXPO_PUBLIC_ENDPOINT!;
+const project = process.env.EXPO_PUBLIC_PROJECT_ID!;
+const platform = process.env.EXPO_PUBLIC_PLATFORM!;
+const databaseID = process.env.EXPO_PUBLIC_DATABASE_ID!;
+const userCollection = process.env.EXPO_PUBLIC_USERS_COLLECTION_ID!;
+const studentsCollection = process.env.EXPO_PUBLIC_STUDENTS_COLLECTION_ID!;
+const attendenceCollection = process.env.EXPO_PUBLIC_ATTENDANCE_COLLECTION_ID!;
+const lecturesCollection = process.env.EXPO_PUBLIC_LECTURES_COLLECTION_ID!;
+const classCollection = process.env.EXPO_PUBLIC_CLASSES_COLLECTION_ID!;
+const storageID = process.env.EXPO_PUBLIC_STORAGE_ID!;
 
 client.setEndpoint(endpoint).setProject(project).setPlatform(platform);
 

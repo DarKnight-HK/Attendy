@@ -11,7 +11,6 @@ import { router, useLocalSearchParams } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import StudentCard from "@/components/studentCard";
 import EmptyState from "@/components/emptyState";
-import useAppwrite from "@/lib/useAppwrite";
 import {
   checkMarked,
   getSpecificLecture,
@@ -23,7 +22,8 @@ import CustomButtom from "@/components/customButton";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const MarkAttendece = () => {
-  const { classID } = useLocalSearchParams();
+  const { id, time } = useLocalSearchParams();
+  console.log(id, time);
   const [changing, setChanging] = useState(false);
   const { data: students, isLoading: studentLoader } = useQuery({
     initialData: [],
@@ -43,10 +43,10 @@ const MarkAttendece = () => {
 
   const { data: classN, isLoading: classLoader } = useQuery({
     initialData: [],
-    queryKey: ["specificLecture", classID],
+    queryKey: ["specificLecture", id],
     queryFn: async () => {
       try {
-        const data = await getSpecificLecture(classID);
+        const data = await getSpecificLecture(id);
         if (!data) return [];
         return data;
       } catch (error) {
@@ -65,9 +65,9 @@ const MarkAttendece = () => {
     isRefetching,
   } = useQuery({
     initialData: [{ absent_students: [] }],
-    queryKey: ["checkMarked", classID, classN[0]?.time],
+    queryKey: ["checkMarked", id, time],
     queryFn: async () => {
-      const data = await checkMarked(classID, new Date());
+      const data = await checkMarked(id, new Date());
       if (data && data?.length > 0) {
         setDocID(data[0].$id);
         setMarked(true);
@@ -89,8 +89,9 @@ const MarkAttendece = () => {
   const onRefresh = async () => {
     await refetchData();
   };
+  const t = time as string;
 
-  const lectureTime = new Date(classN[0]?.time).toLocaleTimeString();
+  const lectureTime = new Date(t).toLocaleTimeString();
   const { mutate, error } = useMutation({
     mutationFn: async () => {
       console.log("Updating...");
@@ -99,7 +100,7 @@ const MarkAttendece = () => {
   });
   const { mutate: markMutation, error: markError } = useMutation({
     mutationFn: async () => {
-      await markAttendence(classID, data[0].absent_students, new Date());
+      await markAttendence(id, data[0].absent_students, new Date());
     },
   });
   console.log(data);
@@ -157,7 +158,7 @@ const MarkAttendece = () => {
             <View className="gap-2">
               <StudentCard
                 setChanging={setChanging}
-                classID={classID}
+                classID={id}
                 time={classN[0]?.time}
                 id={item.$id}
                 managing={true}

@@ -40,8 +40,9 @@ export default function Index() {
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
-          <Text className="font-pbold text-xl mb-4">
-            Attendence Mangement System by HEX
+          <Text className="font-pbold text-xl mb-4">Attendy</Text>
+          <Text className="font-pregualr text-sm mb-4">
+            An attendence tracking app for NTU
           </Text>
           <GraduationCap color={"black"} size={128} />
 
