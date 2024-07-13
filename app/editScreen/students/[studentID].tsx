@@ -90,7 +90,6 @@ const ManageStudents = () => {
         setChanged(true);
       }
     }
-    console.log(form.avatar);
   };
   return (
     <SafeAreaView className="h-full">

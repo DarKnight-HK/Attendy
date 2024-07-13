@@ -39,7 +39,6 @@ const InfoScreen = () => {
       focus: true,
     },
   ];
-  console.log(pieData[0].value, pieData[1].value);
 
   const renderLegend = (text: string, color: string) => {
     return (

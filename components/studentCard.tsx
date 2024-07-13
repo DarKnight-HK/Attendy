@@ -80,7 +80,7 @@ const StudentCard = ({
               absent_students: absentStudents,
             };
             setChanging(false);
-            console.log("newData: ", newData);
+
             return newData;
           } else {
             return [{ absent_students: [] }];

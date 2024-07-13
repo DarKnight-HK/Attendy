@@ -57,7 +57,6 @@ const Attendence = () => {
                 setSelectedDate(day.dateString);
                 settimeStamp(day.timestamp);
                 setDisabled(false);
-                console.log(day);
               }}
               markedDates={{
                 [selectedDate]: {

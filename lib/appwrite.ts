@@ -499,7 +499,6 @@ export const markAttendence = async (
   date: Date
 ) => {
   try {
-    console.log("Mark function called for id: ", absentStudents);
     const newAttendence = await database.createDocument(
       databaseID,
       attendenceCollection,
@@ -519,7 +518,6 @@ export const markAttendence = async (
 };
 export const updateAttendence = async (absent_students: any[], id: any) => {
   try {
-    console.log("Update function called for id: ", id, " ", absent_students);
     const newAttendence = await database.updateDocument(
       databaseID,
       attendenceCollection,

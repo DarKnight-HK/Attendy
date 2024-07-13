@@ -69,7 +69,7 @@ const StatisticsScreen = () => {
       }
     },
   });
-  console.log(currentDay);
+
   return (
     <SafeAreaView className="h-full">
       <View className="flex mt-[60px] px-4 space-y-6">

@@ -80,7 +80,6 @@ const AddStudents = () => {
       if (result.assets.length > 0)
         setForm({ ...form, avatar: result.assets[0] });
     }
-    console.log(form.avatar);
   };
   return (
     <SafeAreaView className="h-full">

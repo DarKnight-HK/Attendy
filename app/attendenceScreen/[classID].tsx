@@ -79,7 +79,6 @@ const MarkAttendece = () => {
   const lectureTime = new Date(t).toLocaleTimeString();
   const { mutate, error } = useMutation({
     mutationFn: async () => {
-      console.log("Updating...");
       await updateAttendence(data[0].absent_students, docID);
     },
   });
@@ -88,7 +87,7 @@ const MarkAttendece = () => {
       await markAttendence(id, data[0].absent_students, new Date());
     },
   });
-  console.log(data);
+
   const onSubmit = async () => {
     setSubmitting(true);
     try {
